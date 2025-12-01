@@ -1,0 +1,75 @@
+/ISMIMS/nbproject/private/
+
+##############################
+# Build output
+##############################
+build/
+dist/
+out/
+target/
+bin/
+.gradle/
+.nb-gradle/
+
+# Compiled source
+*.class
+
+# Package files
+*.war
+*.ear
+
+# Log files
+*.log
+
+##############################
+# IDE-specific
+##############################
+
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+# VS Code
+.vscode/
+
+##############################
+# OS generated files
+##############################
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+##############################
+# Temporary and misc files
+##############################
+*.tmp
+*.swp
+*.swo
+*.bak
+*.properties~
+
+##############################
+# Optional: Environment / config files
+##############################
+# Add your sensitive local configs manually:
+# local.properties
+# .env
+# *.secret.properties
