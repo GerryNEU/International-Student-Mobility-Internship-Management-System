@@ -19,6 +19,6 @@ public class LegalVerifierRole extends Role {
 
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
-        return new LegalVerifierWorkAreaJPanel();
+        return new LegalVerifierWorkAreaJPanel(userProcessContainer, account, organization, enterprise, business);
     }    
 }
