@@ -4,17 +4,35 @@
  */
 package ui.FinancialAuditorRole;
 
+import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.organization.Organization;
+import business.useraccount.UserAccount;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gerrysu
  */
 public class FinancialAuditorWorkAreaJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private Organization organization;
+    private Enterprise enterprise;
+    private EcoSystem business;
+    
     /**
      * Creates new form FinancialAuditorWorkAreaJPanel
      */
-    public FinancialAuditorWorkAreaJPanel() {
+    public FinancialAuditorWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
+              
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        this.business = business;
     }
 
     /**
