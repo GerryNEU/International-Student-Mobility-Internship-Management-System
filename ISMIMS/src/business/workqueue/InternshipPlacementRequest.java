@@ -4,10 +4,53 @@
  */
 package business.workqueue;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author gerrysu
  */
 public class InternshipPlacementRequest {
-    
+
+    private String studentSkills;
+    private String preferredIndustry;
+    private String companyPlaced;
+    private boolean offerAccepted;
+    private ArrayList<String> resumeKeywords;
+
+    public InternshipPlacementRequest(){
+        resumeKeywords = new ArrayList<>();
+    }
+
+    public String getStudentSkills() {
+        return studentSkills;
+    }
+
+    public void setStudentSkills(String studentSkills) {
+        this.studentSkills = studentSkills;
+    }
+
+    public String getPreferredIndustry() {
+        return preferredIndustry;
+    }
+
+    public void setPreferredIndustry(String preferredIndustry) {
+        this.preferredIndustry = preferredIndustry;
+    }
+
+    public String getCompanyPlaced() {
+        return companyPlaced;
+    }
+
+    public void setCompanyPlaced(String companyPlaced) {
+        this.companyPlaced = companyPlaced;
+    }
+
+    public boolean isOfferAccepted() {
+        return offerAccepted;
+    }
+
+    public void setOfferAccepted(boolean offerAccepted) {
+        this.offerAccepted = offerAccepted;
+    }    
 }
