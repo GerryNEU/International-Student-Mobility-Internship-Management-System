@@ -20,6 +20,6 @@ public class SystemAdminRole extends Role{
     
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
-        return new SystemAdminWorkAreaJPanel(); // You will need to update the constructor of JPanel to accept these parameters later
+        return new SystemAdminWorkAreaJPanel(userProcessContainer, account, organization, enterprise, business); // You will need to update the constructor of JPanel to accept these parameters later
     }  
 }
