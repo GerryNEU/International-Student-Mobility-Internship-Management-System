@@ -24,7 +24,7 @@ public class AdmissionsOfficerWorkAreaJPanel extends javax.swing.JPanel {
     /**
      * Creates new form AdmissionsOfficerWorkAreaJPanel
      */
-    public AdmissionsOfficerWorkAreaJPanel() {
+    public AdmissionsOfficerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
         initComponents();
         
         this.userProcessContainer = userProcessContainer;
