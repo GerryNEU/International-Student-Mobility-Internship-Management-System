@@ -4,7 +4,6 @@
  */
 package business.enterprise;
 
-import business.enterprise.Enterprise.EnterpriseType;
 import business.role.Role;
 import java.util.ArrayList;
 
@@ -12,10 +11,10 @@ import java.util.ArrayList;
  *
  * @author gerrysu
  */
-public class CorporateEnterprise {
+public class CorporateEnterprise extends Enterprise{
 
     public CorporateEnterprise(String name){
-        super(name,EnterpriseType.Corporate);
+        super(name, EnterpriseType.Corporate);
     }
     
     @Override
