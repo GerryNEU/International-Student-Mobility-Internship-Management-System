@@ -4,17 +4,40 @@
  */
 package ui.SystemAdminWorkArea;
 
+import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.network.Network;
+import business.organization.Organization;
+import business.useraccount.UserAccount;
+import java.awt.CardLayout;
+import java.util.ArrayList;
+import javax.swing.JPanel;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+
 /**
  *
  * @author gerrysu
  */
 public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
 
+    JPanel userProcessContainer;
+    EcoSystem system;
+    
     /**
      * Creates new form SystemAdminWorkAreaJPanel
      */
-    public SystemAdminWorkAreaJPanel() {
+    public SystemAdminWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem system) {  
         initComponents();
+        
+        this.userProcessContainer = userProcessContainer;       
+        this.system = system;
+
+        populateTree();
+    }
+    
+    public void populateTree() {
+        // Logic to populate JTree with Networks and Enterprises
     }
 
     /**
@@ -26,19 +49,30 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+
+        jLabel1.setText("Test");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(116, 116, 116)
+                .addComponent(jLabel1)
+                .addContainerGap(259, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(75, 75, 75)
+                .addComponent(jLabel1)
+                .addContainerGap(208, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
