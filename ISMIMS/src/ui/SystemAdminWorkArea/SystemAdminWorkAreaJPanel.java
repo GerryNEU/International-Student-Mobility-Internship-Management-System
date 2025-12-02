@@ -51,7 +51,7 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
 
-        jLabel1.setText("Test");
+        jLabel1.setText("System Admin Work Area");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -60,7 +60,7 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(116, 116, 116)
                 .addComponent(jLabel1)
-                .addContainerGap(259, Short.MAX_VALUE))
+                .addContainerGap(135, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
