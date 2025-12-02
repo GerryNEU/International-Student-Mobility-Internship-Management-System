@@ -4,10 +4,24 @@
  */
 package business.organization;
 
+import business.role.AdmissionsOfficerRole;
+import business.role.Role;
+import java.util.ArrayList;
+
 /**
  *
  * @author gerrysu
  */
-public class InternationalAdmissionsOrganization {
-    
+public class InternationalAdmissionsOrganization extends Organization{
+
+    public InternationalAdmissionsOrganization() {
+        super(Organization.Type.InternationalAdmissions.getValue());
+    }
+
+    @Override
+    public ArrayList<Role> getSupportedRole() {
+        ArrayList<Role> roles = new ArrayList();
+        roles.add(new AdmissionsOfficerRole());
+        return roles;
+    }    
 }
