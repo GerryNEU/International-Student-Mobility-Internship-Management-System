@@ -4,10 +4,24 @@
  */
 package business.organization;
 
+import business.role.CorporateRecruiterRole;
+import business.role.Role;
+import java.util.ArrayList;
+
 /**
  *
  * @author gerrysu
  */
-public class TalentAcquisitionOrganization {
+public class TalentAcquisitionOrganization extends Organization {
     
+    public TalentAcquisitionOrganization() {
+        super(Organization.Type.TalentAcquisition.getValue());
+    }
+
+    @Override
+    public ArrayList<Role> getSupportedRole() {
+        ArrayList<Role> roles = new ArrayList();
+        roles.add(new CorporateRecruiterRole());
+        return roles;
+    }    
 }

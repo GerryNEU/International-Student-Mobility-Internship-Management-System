@@ -4,10 +4,21 @@
  */
 package business.role;
 
+import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.organization.Organization;
+import business.useraccount.UserAccount;
+import javax.swing.JPanel;
+import ui.RegistrarRole.RegistrarWorkAreaJPanel;
+
 /**
  *
  * @author gerrysu
  */
-public class RegistrarRole {
-    
+public class RegistrarRole extends Role {
+
+    @Override
+    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
+        return new RegistrarWorkAreaJPanel();
+    }       
 }
