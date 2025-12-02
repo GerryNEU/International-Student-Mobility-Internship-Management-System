@@ -4,10 +4,19 @@
  */
 package business.enterprise;
 
+import business.role.Role;
+import java.util.ArrayList;
+
 /**
  *
  * @author gerrysu
  */
-public class HomeUniversityEnterprise {
-    
+public class HomeUniversityEnterprise extends Enterprise{
+    public HomeUniversityEnterprise(String name){
+        super(name,EnterpriseType.HomeUniversity);
+    }
+    @Override
+    public ArrayList<Role> getSupportedRole() {
+        return null; // Enterprise Admin roles are handled at UserAccount level, generic here
+    }    
 }
