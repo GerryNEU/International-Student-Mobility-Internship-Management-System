@@ -8,6 +8,16 @@ package business.organization;
  *
  * @author gerrysu
  */
-public class RegistrarOrganization {
-    
+public class RegistrarOrganization extends Organization {
+
+    public RegistrarOrganization() {
+        super(Organization.Type.Registrar.getValue());
+    }
+
+    @Override
+    public ArrayList<Role> getSupportedRole() {
+        ArrayList<Role> roles = new ArrayList();
+        roles.add(new RegistrarRole());
+        return roles;
+    }    
 }

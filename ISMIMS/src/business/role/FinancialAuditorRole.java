@@ -9,7 +9,7 @@ import business.enterprise.Enterprise;
 import business.organization.Organization;
 import business.useraccount.UserAccount;
 import javax.swing.JPanel;
-import ui.AdmissionsOfficerRole.AdmissionsOfficerWorkAreaJPanel;
+import ui.FinancialAuditorRole.FinancialAuditorWorkAreaJPanel;
 
 /**
  *
@@ -19,6 +19,6 @@ public class FinancialAuditorRole extends Role {
 
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
-        return new AdmissionsOfficerWorkAreaJPanel();
+        return new FinancialAuditorWorkAreaJPanel();
     }      
 }
