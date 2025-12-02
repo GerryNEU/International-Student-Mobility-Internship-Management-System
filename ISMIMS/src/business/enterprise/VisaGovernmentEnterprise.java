@@ -4,10 +4,20 @@
  */
 package business.enterprise;
 
+import business.role.Role;
+import java.util.ArrayList;
+
 /**
  *
  * @author gerrysu
  */
-public class VisaGovernmentEnterprise {
+public class VisaGovernmentEnterprise extends Enterprise{
     
+    public VisaGovernmentEnterprise(String name){
+        super(name,EnterpriseType.VisaGovernment);
+    }
+    @Override
+    public ArrayList<Role> getSupportedRole() {
+        return null;
+    }    
 }
