@@ -4,6 +4,10 @@
  */
 package business.organization;
 
+import business.role.RegistrarRole;
+import business.role.Role;
+import java.util.ArrayList;
+
 /**
  *
  * @author gerrysu
