@@ -18,7 +18,16 @@ import ui.FinancialAuditorRole.FinancialAuditorWorkAreaJPanel;
 public class FinancialAuditorRole extends Role {
 
     @Override
-    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
-        return new FinancialAuditorWorkAreaJPanel(userProcessContainer, account, organization, enterprise, business);
-    }      
+    public JPanel createWorkArea(JPanel userProcessContainer, 
+                                UserAccount account, 
+                                Organization organisation, 
+                                Enterprise enterprise, 
+                                EcoSystem business) {
+        return new FinancialAuditorWorkAreaJPanel(
+            userProcessContainer, 
+            account, 
+            organisation, 
+            business
+        );
+    }    
 }
