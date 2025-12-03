@@ -15,6 +15,7 @@ public abstract class WorkRequest {
 
     private String message;
     private UserAccount sender;
+    private String result;
     private UserAccount receiver;
     private String status;
     private Date requestDate;
@@ -75,5 +76,12 @@ public abstract class WorkRequest {
     @Override
     public String toString(){
         return message;
-    }    
+    } 
+    public String getResult() {
+        return result;
+    }
+    
+    public void setResult(String result) {
+        this.result = result;
+    }
 }
