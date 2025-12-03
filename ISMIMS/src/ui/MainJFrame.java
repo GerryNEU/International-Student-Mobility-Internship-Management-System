@@ -59,6 +59,11 @@ public class MainJFrame extends javax.swing.JFrame {
         });
 
         btnLogout.setText("Logout");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         lblUserName.setText("UserName");
 
@@ -178,10 +183,12 @@ public class MainJFrame extends javax.swing.JFrame {
             btnLogout.setEnabled(true);
             txtUserName.setEnabled(false);
             txtPassword.setEnabled(false);
-        }
-    }                                        
+        }                                       
+        
+    }//GEN-LAST:event_btnLoginActionPerformed
 
-    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {                                          
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        // TODO add your handling code here:
         btnLogout.setEnabled(false);
         txtUserName.setEnabled(true);
         txtPassword.setEnabled(true);
@@ -194,8 +201,8 @@ public class MainJFrame extends javax.swing.JFrame {
         JPanel blankJP = new JPanel();
         container.add("blank", blankJP);
         CardLayout crdLyt = (CardLayout) container.getLayout();
-        crdLyt.next(container);        
-    }//GEN-LAST:event_btnLoginActionPerformed
+        crdLyt.next(container);
+    }//GEN-LAST:event_btnLogoutActionPerformed
 
     /**
      * @param args the command line arguments
