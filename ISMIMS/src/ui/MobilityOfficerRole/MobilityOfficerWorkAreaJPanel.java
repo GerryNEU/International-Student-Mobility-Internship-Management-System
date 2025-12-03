@@ -10,6 +10,7 @@ import business.organization.Organization;
 import business.useraccount.UserAccount;
 import business.workqueue.StudyAbroadApplication;
 import business.workqueue.WorkRequest;
+import java.awt.CardLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -148,14 +149,13 @@ public class MobilityOfficerWorkAreaJPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         int selectedRow = tblRequests.getSelectedRow();
         if(selectedRow >= 0){
-            WorkRequest request = (WorkRequest)tblRequests.getValueAt(selectedRow, 0);
+            StudyAbroadApplication request = (StudyAbroadApplication)tblRequests.getValueAt(selectedRow, 0);
             
-            // Navigate to ProcessApplicationJPanel (To be implemented)
-            // ProcessApplicationJPanel processPanel = new ProcessApplicationJPanel(userProcessContainer, request);
-            // userProcessContainer.add("ProcessApplicationJPanel", processPanel);
-            // ... next() ...
-            
-            JOptionPane.showMessageDialog(null, "Selected: " + request.getMessage() + "\n(Navigation to process panel to be implemented next)");
+            // Navigate to ProcessApplicationJPanel
+            ProcessApplicationJPanel processPanel = new ProcessApplicationJPanel(userProcessContainer, request, business);
+            userProcessContainer.add("ProcessApplicationJPanel", processPanel);
+            CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+            layout.next(userProcessContainer);
             
         } else {
             JOptionPane.showMessageDialog(null, "Please select a request to process.");

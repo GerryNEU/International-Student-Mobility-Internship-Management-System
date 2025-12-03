@@ -4,17 +4,52 @@
  */
 package ui.MobilityOfficerRole;
 
+import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.network.Network;
+import business.organization.InternationalAdmissionsOrganization;
+import business.organization.Organization;
+import business.workqueue.NominationRequest;
+import business.workqueue.StudyAbroadApplication;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gerrysu
  */
 public class ProcessApplicationJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private StudyAbroadApplication request;
+    private EcoSystem system;
+    
     /**
      * Creates new form ProcessApplicationJPanel
      */
-    public ProcessApplicationJPanel() {
+    public ProcessApplicationJPanel(JPanel userProcessContainer, StudyAbroadApplication request, EcoSystem system) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.request = request;
+        this.system = system;
+        
+        populateData();        
+
+    }
+
+    private void populateData(){
+        txtStudent.setText(request.getSender().getEmployee().getName());
+        txtMajor.setText(request.getMajor());
+        txtGPA.setText(String.valueOf(request.getCurrentGPA()));
+        txtTargetUni.setText(request.getSelectedUniversity());
+        
+        // Disable editing
+        txtStudent.setEnabled(false);
+        txtMajor.setEnabled(false);
+        txtGPA.setEnabled(false);
+        txtTargetUni.setEnabled(false);
     }
 
     /**
@@ -26,19 +61,206 @@ public class ProcessApplicationJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+        lblStudent = new javax.swing.JLabel();
+        lblMajor = new javax.swing.JLabel();
+        lblGPA = new javax.swing.JLabel();
+        lblTargetUni = new javax.swing.JLabel();
+        lblMessage = new javax.swing.JLabel();
+        txtStudent = new javax.swing.JTextField();
+        txtMajor = new javax.swing.JTextField();
+        txtGPA = new javax.swing.JTextField();
+        txtTargetUni = new javax.swing.JTextField();
+        txtMessage = new javax.swing.JTextField();
+        btnBack = new javax.swing.JButton();
+        btnApprove = new javax.swing.JButton();
+        btnReject = new javax.swing.JButton();
+
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        jLabel1.setText("Review Application");
+
+        lblStudent.setText("Student:");
+
+        lblMajor.setText("Major:");
+
+        lblGPA.setText("GPA:");
+
+        lblTargetUni.setText("Target Uni:");
+
+        lblMessage.setText("Officer Comments:");
+
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
+        btnApprove.setText("Nominate Student");
+        btnApprove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApproveActionPerformed(evt);
+            }
+        });
+
+        btnReject.setText("Reject Application");
+        btnReject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRejectActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(370, 370, 370)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(33, 33, 33)
+                        .addComponent(btnBack)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 251, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblMajor)
+                            .addComponent(lblStudent)
+                            .addComponent(lblGPA)
+                            .addComponent(lblTargetUni)
+                            .addComponent(lblMessage))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(txtStudent, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                                .addComponent(txtMajor, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtGPA, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(txtTargetUni, javax.swing.GroupLayout.Alignment.LEADING))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnApprove)
+                        .addGap(73, 73, 73)
+                        .addComponent(btnReject)
+                        .addGap(23, 23, 23)))
+                .addGap(238, 238, 238))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblStudent)
+                    .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblMajor)
+                    .addComponent(txtMajor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblGPA)
+                    .addComponent(txtGPA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTargetUni)
+                    .addComponent(txtTargetUni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblMessage)
+                    .addComponent(txtMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(43, 43, 43)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnApprove)
+                    .addComponent(btnReject))
+                .addGap(28, 28, 28)
+                .addComponent(btnBack)
+                .addContainerGap(292, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
+        // TODO add your handling code here:
+        request.setStatus("Rejected");
+        request.setResult("Rejected: " + txtMessage.getText());
+        JOptionPane.showMessageDialog(null, "Application Rejected.");
+        goBack();
+    }//GEN-LAST:event_btnRejectActionPerformed
+
+    private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
+        // TODO add your handling code here:
+        // 1. Update status
+        request.setStatus("Nominated");
+        request.setResult("Approved by Mobility Officer");
+        
+        // 2. Find Host University and Admission Org
+        Organization targetOrg = null;
+        String targetUniName = request.getSelectedUniversity();
+        
+        for (Network n : system.getNetworkList()){
+            for (Enterprise e : n.getEnterpriseDirectory().getEnterpriseList()){
+                // Check if this is the target university (Exact string match for now)
+                if (e.getName().equalsIgnoreCase(targetUniName) && e instanceof business.enterprise.HostUniversityEnterprise){
+                    // Find Admissions Org
+                    for (Organization o : e.getOrganizationDirectory().getOrganizationList()){
+                        if (o instanceof InternationalAdmissionsOrganization){
+                            targetOrg = o;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (targetOrg != null){
+            // 3. Create Nomination Request
+            NominationRequest nomination = new NominationRequest();
+            nomination.setStudentApplication(request); // Link original app
+            nomination.setMessage("Nomination for " + request.getSender().getEmployee().getName());
+            nomination.setSender(request.getSender()); // Or set sender as Mobility Officer
+            nomination.setStatus("Nominated");
+            
+            targetOrg.getWorkQueue().getWorkRequestList().add(nomination);
+            JOptionPane.showMessageDialog(null, "Student Nominated! Sent to " + targetUniName);
+            goBack();
+        } else {
+            JOptionPane.showMessageDialog(null, "Error: Could not find Host University '" + targetUniName + "' in the system.");
+        }
+    }//GEN-LAST:event_btnApproveActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        goBack();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void goBack(){
+        userProcessContainer.remove(this);
+        Component[] componentArray = userProcessContainer.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        MobilityOfficerWorkAreaJPanel dwjp = (MobilityOfficerWorkAreaJPanel) component;
+        dwjp.populateTable(); // Refresh the table
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnApprove;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnReject;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lblGPA;
+    private javax.swing.JLabel lblMajor;
+    private javax.swing.JLabel lblMessage;
+    private javax.swing.JLabel lblStudent;
+    private javax.swing.JLabel lblTargetUni;
+    private javax.swing.JTextField txtGPA;
+    private javax.swing.JTextField txtMajor;
+    private javax.swing.JTextField txtMessage;
+    private javax.swing.JTextField txtStudent;
+    private javax.swing.JTextField txtTargetUni;
     // End of variables declaration//GEN-END:variables
 }
