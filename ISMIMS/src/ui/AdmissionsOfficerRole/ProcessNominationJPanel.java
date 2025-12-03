@@ -4,17 +4,43 @@
  */
 package ui.AdmissionsOfficerRole;
 
+import business.workqueue.NominationRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gerrysu
  */
 public class ProcessNominationJPanel extends javax.swing.JPanel {
+    
+    private JPanel userProcessContainer;
+    private NominationRequest request;
 
     /**
      * Creates new form ProcessNominationJPanel
      */
-    public ProcessNominationJPanel() {
+    public ProcessNominationJPanel(JPanel userProcessContainer, NominationRequest request) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.request = request;
+        
+        populateData();
+    }
+    
+    private void populateData(){
+        // Extract data from the nested Student Application
+        txtStudent.setText(request.getStudentApplication().getSender().getEmployee().getName());
+        txtHomeUni.setText(request.getSender().getEmployee().getName()); // Assuming sender was Mobility Officer or derived from UserAccount
+        txtMajor.setText(request.getStudentApplication().getMajor());
+        txtGPA.setText(String.valueOf(request.getStudentApplication().getCurrentGPA()));
+        
+        txtStudent.setEnabled(false);
+        txtHomeUni.setEnabled(false);
+        txtMajor.setEnabled(false);
+        txtGPA.setEnabled(false);
     }
 
     /**
@@ -26,19 +52,198 @@ public class ProcessNominationJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitle = new javax.swing.JLabel();
+        lblStudent = new javax.swing.JLabel();
+        lblHomeUni = new javax.swing.JLabel();
+        lblMajor = new javax.swing.JLabel();
+        lblGPA = new javax.swing.JLabel();
+        lblComments = new javax.swing.JLabel();
+        txtStudent = new javax.swing.JTextField();
+        txtHomeUni = new javax.swing.JTextField();
+        txtMajor = new javax.swing.JTextField();
+        txtGPA = new javax.swing.JTextField();
+        txtComments = new javax.swing.JTextField();
+        btnAdmit = new javax.swing.JButton();
+        btnDeny = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
+
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        lblTitle.setText("Evaluate Nomination");
+
+        lblStudent.setText("Student Name:");
+
+        lblHomeUni.setText("Nominated By:");
+
+        lblMajor.setText("Major:");
+
+        lblGPA.setText("GPA:");
+
+        lblComments.setText("Decision Notes:");
+
+        txtHomeUni.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHomeUniActionPerformed(evt);
+            }
+        });
+
+        btnAdmit.setText("Admit Student");
+        btnAdmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAdmitActionPerformed(evt);
+            }
+        });
+
+        btnDeny.setText("Deny Admission");
+        btnDeny.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDenyActionPerformed(evt);
+            }
+        });
+
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(326, 326, 326)
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnBack)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(232, 232, 232)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblHomeUni)
+                    .addComponent(lblStudent)
+                    .addComponent(lblMajor)
+                    .addComponent(lblGPA)
+                    .addComponent(lblComments))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtStudent, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                    .addComponent(txtHomeUni)
+                    .addComponent(txtMajor)
+                    .addComponent(txtGPA)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtComments)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 193, Short.MAX_VALUE)
+                .addComponent(btnAdmit)
+                .addGap(144, 144, 144)
+                .addComponent(btnDeny)
+                .addGap(325, 325, 325))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(lblTitle)
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblStudent)
+                            .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblHomeUni)
+                            .addComponent(txtHomeUni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblMajor)
+                            .addComponent(txtMajor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblGPA)
+                            .addComponent(txtGPA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblComments)
+                            .addComponent(txtComments, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(320, 320, 320)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAdmit)
+                            .addComponent(btnDeny))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 353, Short.MAX_VALUE)
+                .addComponent(btnBack)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtHomeUniActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHomeUniActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHomeUniActionPerformed
+
+    private void btnAdmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdmitActionPerformed
+        // TODO add your handling code here:
+        request.setStatus("Admitted");
+        request.setNominationNotes(txtComments.getText());
+        
+        // Critical: Update the original student application so the student sees the update!
+        request.getStudentApplication().setStatus("Admitted");
+        request.getStudentApplication().setResult("Admitted by Host University");
+        
+        JOptionPane.showMessageDialog(null, "Student Admitted Successfully");
+        goBack();        
+    }//GEN-LAST:event_btnAdmitActionPerformed
+
+    private void btnDenyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDenyActionPerformed
+        // TODO add your handling code here:
+        request.setStatus("Denied");
+        request.setNominationNotes(txtComments.getText());
+        
+        request.getStudentApplication().setStatus("Denied");
+        request.getStudentApplication().setResult("Application Denied by Host University");
+        
+        JOptionPane.showMessageDialog(null, "Admission Denied");
+        goBack();
+    }//GEN-LAST:event_btnDenyActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBackActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {                                        
+        goBack();
+    }
+    
+    private void goBack(){
+        userProcessContainer.remove(this);
+        Component[] componentArray = userProcessContainer.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        AdmissionsOfficerWorkAreaJPanel dwjp = (AdmissionsOfficerWorkAreaJPanel) component;
+        dwjp.populateTable();
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdmit;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnDeny;
+    private javax.swing.JLabel lblComments;
+    private javax.swing.JLabel lblGPA;
+    private javax.swing.JLabel lblHomeUni;
+    private javax.swing.JLabel lblMajor;
+    private javax.swing.JLabel lblStudent;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTextField txtComments;
+    private javax.swing.JTextField txtGPA;
+    private javax.swing.JTextField txtHomeUni;
+    private javax.swing.JTextField txtMajor;
+    private javax.swing.JTextField txtStudent;
     // End of variables declaration//GEN-END:variables
 }
