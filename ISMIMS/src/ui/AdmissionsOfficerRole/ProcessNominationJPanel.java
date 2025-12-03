@@ -213,12 +213,10 @@ public class ProcessNominationJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnDenyActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
+        // TODO add your handling code here:                                        
+        goBack();
     }//GEN-LAST:event_btnBackActionPerformed
 
-    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {                                        
-        goBack();
-    }
     
     private void goBack(){
         userProcessContainer.remove(this);
