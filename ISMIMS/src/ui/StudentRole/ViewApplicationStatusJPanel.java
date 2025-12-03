@@ -4,17 +4,54 @@
  */
 package ui.StudentRole;
 
+import business.useraccount.UserAccount;
+import business.workqueue.StudyAbroadApplication;
+import business.workqueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author gerrysu
  */
 public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private UserAccount userAccount;
+    
     /**
      * Creates new form ViewApplicationStatusJPanel
      */
-    public ViewApplicationStatusJPanel() {
+    public ViewApplicationStatusJPanel(JPanel userProcessContainer, UserAccount userAccount) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = userAccount;
+        
+        populateTable();
+        btnRequestVisa.setEnabled(false); // Default disabled
+    }
+    
+    private void populateTable(){
+        DefaultTableModel model = (DefaultTableModel) tblStatus.getModel();
+        model.setRowCount(0);
+        
+        for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()){
+            if(request instanceof StudyAbroadApplication){
+                Object[] row = new Object[4];
+                row[0] = request;
+                row[1] = ((StudyAbroadApplication) request).getSelectedUniversity();
+                row[2] = request.getStatus();
+                row[3] = ((StudyAbroadApplication) request).getResult();
+                
+                model.addRow(row);
+                
+                // Check if admitted to enable Visa button
+                if("Admitted".equals(request.getStatus())){
+                    btnRequestVisa.setEnabled(true);
+                }
+            }
+        }
     }
 
     /**
@@ -26,19 +63,101 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnBack = new javax.swing.JButton();
+        lblTitle = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblStatus = new javax.swing.JTable();
+        btnRequestVisa = new javax.swing.JButton();
+
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
+        lblTitle.setText("Application Status");
+
+        tblStatus.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Message", "University", "Status", "Result"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblStatus);
+
+        btnRequestVisa.setText("Request Visa Support");
+        btnRequestVisa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRequestVisaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(375, 375, 375)
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnBack))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(351, 351, 351)
+                        .addComponent(btnRequestVisa))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(140, 140, 140)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(85, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(lblTitle)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(30, 30, 30)
+                .addComponent(btnRequestVisa)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 154, Short.MAX_VALUE)
+                .addComponent(btnBack)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRequestVisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRequestVisaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnRequestVisaActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        userProcessContainer.remove(this);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+    }//GEN-LAST:event_btnBackActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnRequestVisa;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblStatus;
     // End of variables declaration//GEN-END:variables
 }

@@ -8,7 +8,13 @@ import business.EcoSystem;
 import business.enterprise.Enterprise;
 import business.organization.Organization;
 import business.useraccount.UserAccount;
+import business.workqueue.NominationRequest;
+import business.workqueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author gerrysu
@@ -32,6 +38,27 @@ public class AdmissionsOfficerWorkAreaJPanel extends javax.swing.JPanel {
         this.organization = organization;
         this.enterprise = enterprise;
         this.business = business;
+        
+        populateTable();
+    }
+    
+    public void populateTable(){
+        DefaultTableModel model = (DefaultTableModel) tblNominations.getModel();
+        model.setRowCount(0);
+        
+        for(WorkRequest request : organization.getWorkQueue().getWorkRequestList()){
+            if(request instanceof NominationRequest){
+                NominationRequest nom = (NominationRequest) request;
+                Object[] row = new Object[4];
+                row[0] = nom;
+                // Get the name from the original student application
+                row[1] = nom.getStudentApplication().getSender().getEmployee().getName();
+                row[2] = nom.getStatus();
+                row[3] = nom.getRequestDate();
+                
+                model.addRow(row);
+            }
+        }
     }
 
     /**
@@ -43,30 +70,112 @@ public class AdmissionsOfficerWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblNominations = new javax.swing.JTable();
+        btnEvaluate = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
 
-        jLabel1.setText("Admissions Officer Dashboard");
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        lblTitle.setText("Admissions Officer Dashboard");
+
+        tblNominations.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Message", "Student Name", "Status", "Date"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblNominations);
+
+        btnEvaluate.setText("Evaluate Nomination");
+        btnEvaluate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEvaluateActionPerformed(evt);
+            }
+        });
+
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(lblTitle)
+                .addGap(287, 287, 287))
             .addGroup(layout.createSequentialGroup()
-                .addGap(127, 127, 127)
-                .addComponent(jLabel1)
-                .addContainerGap(94, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(228, 228, 228)
+                        .addComponent(btnEvaluate)
+                        .addGap(211, 211, 211)
+                        .addComponent(btnRefresh))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(160, 160, 160)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(160, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(122, 122, 122)
-                .addComponent(jLabel1)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(lblTitle)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEvaluate)
+                    .addComponent(btnRefresh))
+                .addContainerGap(170, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnEvaluateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEvaluateActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblNominations.getSelectedRow();
+        if(selectedRow >= 0){
+            NominationRequest request = (NominationRequest)tblNominations.getValueAt(selectedRow, 0);
+            
+            ProcessNominationJPanel processPanel = new ProcessNominationJPanel(userProcessContainer, request);
+            userProcessContainer.add("ProcessNominationJPanel", processPanel);
+            CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+            layout.next(userProcessContainer);
+            
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a nomination to evaluate.");
+        }
+    }//GEN-LAST:event_btnEvaluateActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        populateTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnEvaluate;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblNominations;
     // End of variables declaration//GEN-END:variables
 }
