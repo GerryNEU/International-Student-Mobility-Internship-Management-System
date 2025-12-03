@@ -57,6 +57,10 @@ public class OrganizationDirectory {
             organization = new StudentAffairsOrganization();
             organizationList.add(organization);
         }
+        else if (type.getValue().equals(Type.SiteSupervision.getValue())){ // Logic for new org
+            organization = new SiteSupervisionOrganization();
+            organizationList.add(organization);
+        }
         return organization;
     }    
 }
