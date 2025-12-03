@@ -31,7 +31,8 @@ public abstract class Organization {
         FinancialAid("Financial Aid Organization"),
         Registrar("Registrar Organization"),
         TalentAcquisition("Talent Acquisition Organization"),
-        StudentAffairs("Student Affairs Organization");
+        StudentAffairs("Student Affairs Organization"),
+        SiteSupervision("Site Supervision Organization");
         
         private String value;
         private Type(String value) {

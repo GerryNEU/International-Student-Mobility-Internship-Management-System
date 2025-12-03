@@ -11,8 +11,6 @@ import business.organization.InternationalAdmissionsOrganization;
 import business.organization.Organization;
 import business.workqueue.NominationRequest;
 import business.workqueue.StudyAbroadApplication;
-import business.workqueue.FinancialClearanceRequest;
-import business.organization.FinancialAidOrganization;
 import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.JOptionPane;
@@ -194,53 +192,43 @@ public class ProcessApplicationJPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
-        // 1. Update application status to "Pending Financial Review"
-        request.setStatus("Pending Financial Review");
-        request.setResult("Approved by Mobility Officer - Sent for Financial Clearance");
-
-        // 2. Find Financial Aid Organization in home university
-        Organization financialOrg = null;
-        Enterprise homeUniversity = null;
-
-        // Find the Home University Enterprise where current user belongs
-        for (Network n : system.getNetworkList()) {
-            for (Enterprise e : n.getEnterpriseDirectory().getEnterpriseList()) {
-                if (e instanceof business.enterprise.HomeUniversityEnterprise) {
-                    // Check if Organization belongs to this Enterprise
-                    for (Organization o : e.getOrganizationDirectory().getOrganizationList()) {
-                        // Find Financial Aid Organization
-                        if (o instanceof business.organization.FinancialAidOrganization) {
-                            financialOrg = o;
-                            homeUniversity = e;
+        // TODO add your handling code here:
+        // 1. Update status
+        request.setStatus("Nominated");
+        request.setResult("Approved by Mobility Officer");
+        
+        // 2. Find Host University and Admission Org
+        Organization targetOrg = null;
+        String targetUniName = request.getSelectedUniversity();
+        
+        for (Network n : system.getNetworkList()){
+            for (Enterprise e : n.getEnterpriseDirectory().getEnterpriseList()){
+                // Check if this is the target university (Exact string match for now)
+                if (e.getName().equalsIgnoreCase(targetUniName) && e instanceof business.enterprise.HostUniversityEnterprise){
+                    // Find Admissions Org
+                    for (Organization o : e.getOrganizationDirectory().getOrganizationList()){
+                        if (o instanceof InternationalAdmissionsOrganization){
+                            targetOrg = o;
                             break;
                         }
                     }
                 }
-                if (financialOrg != null) break;
             }
-            if (financialOrg != null) break;
         }
-
-        if (financialOrg != null) {
-            // 3. Create FinancialClearanceRequest
-            FinancialClearanceRequest finRequest = new FinancialClearanceRequest();
-            finRequest.setMessage("Financial Clearance for " + request.getSender().getEmployee().getName());
-            finRequest.setSender(request.getSender());
-            finRequest.setStatus("Pending Financial Audit");
-            finRequest.setGrantAmountRequested(0.0); // Can get from application
-
-            // Link the original application (need to add this field to FinancialClearanceRequest)
-            // finRequest.setStudentApplication(request);
-
-            // 4. Add to Financial Aid Organization's work queue
-            financialOrg.getWorkQueue().getWorkRequestList().add(finRequest);
-
-            JOptionPane.showMessageDialog(null, 
-                "Application approved! Sent to Financial Aid for clearance.");
+        
+        if (targetOrg != null){
+            // 3. Create Nomination Request
+            NominationRequest nomination = new NominationRequest();
+            nomination.setStudentApplication(request); // Link original app
+            nomination.setMessage("Nomination for " + request.getSender().getEmployee().getName());
+            nomination.setSender(request.getSender()); // Or set sender as Mobility Officer
+            nomination.setStatus("Nominated");
+            
+            targetOrg.getWorkQueue().getWorkRequestList().add(nomination);
+            JOptionPane.showMessageDialog(null, "Student Nominated! Sent to " + targetUniName);
             goBack();
         } else {
-            JOptionPane.showMessageDialog(null, 
-                "Error: Could not find Financial Aid Organization.");
+            JOptionPane.showMessageDialog(null, "Error: Could not find Host University '" + targetUniName + "' in the system.");
         }
     }//GEN-LAST:event_btnApproveActionPerformed
 
