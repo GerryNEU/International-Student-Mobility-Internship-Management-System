@@ -194,23 +194,80 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
 
     private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
         // TODO add your handling code here:
-        String amount = txtApprovedAmount.getText().trim();
+        String approvedAmtStr = txtApprovedAmount.getText().trim();
     
-        if (amount.isEmpty()) {
+    if (approvedAmtStr.isEmpty()) {
+        javax.swing.JOptionPane.showMessageDialog(null, 
+            "Please enter the approved amount.");
+        return;
+    }
+    
+    try {
+        double approvedAmount = Double.parseDouble(approvedAmtStr);
+        
+        // Validate amount is positive
+        if (approvedAmount <= 0) {
             javax.swing.JOptionPane.showMessageDialog(null, 
-                "Please enter the approved amount.");
+                "Approved amount must be greater than 0.");
             return;
         }
-
+        
+        // 2. Update FinancialClearanceRequest
+        request.setApprovedAmount(approvedAmount);
+        request.setStatus("Calculated Aid");
+        request.setResult("Scholarship calculated: $" + approvedAmount);
+        
+        // Add comments if provided
+        String comments = txtComments.getText().trim();
+        if (!comments.isEmpty()) {
+            request.setResult(request.getResult() + " - " + comments);
+        }
+        
+        // 3. Get the original StudyAbroadApplication
+        business.workqueue.StudyAbroadApplication studentApp = request.getStudentApplication();
+        
+        if (studentApp == null) {
+            javax.swing.JOptionPane.showMessageDialog(null, 
+                "Error: Cannot find student application.");
+            return;
+        }
+        
+        // 4. Update StudyAbroadApplication with scholarship info
+        studentApp.setScholarshipAmount(approvedAmount);
+        studentApp.setFinancialStatus("Aid Calculated");
+        
+        // Update application status
+        String currentStatus = studentApp.getStatus();
+        if (currentStatus == null || currentStatus.equals("Pending Financial Review")) {
+            studentApp.setStatus("Financial Clearance Approved");
+        }
+        
+        // Update result message
+        studentApp.setResult("Scholarship approved: $" + approvedAmount + 
+                           " (waiting for admission offer)");
+        
+        // 5. Show success message
         javax.swing.JOptionPane.showMessageDialog(null, 
-            "UI Test: Approved Amount = $" + amount + 
-            "\n(Full logic will be implemented in next push)");
+            "✅ Scholarship Calculated Successfully!\n\n" +
+            "Student: " + studentApp.getSender().getEmployee().getName() + "\n" +
+            "Approved Amount: $" + approvedAmount + "\n" +
+            "Status: Aid Calculated\n\n" +
+            "The student can now view their scholarship amount.\n" +
+            "Waiting for admission offer from host university.");
+        
+        // 6. Go back to work area
+        goBack();
+        
+    } catch (NumberFormatException e) {
+        javax.swing.JOptionPane.showMessageDialog(null, 
+            "Please enter a valid number for the approved amount.");
+    }
     }//GEN-LAST:event_btnApproveActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
         // TODO add your handling code here:
         goBack();
-        }//GEN-LAST:event_btnBackActionPerformed
+        }                                       
 
         private void goBack() {
             userProcessContainer.remove(this);
