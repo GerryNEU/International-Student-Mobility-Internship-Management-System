@@ -4,17 +4,38 @@
  */
 package ui.StudentRole;
 
+import business.enterprise.Enterprise;
+import business.organization.ApplicationProcessingOrganization;
+import business.organization.Organization;
+import business.useraccount.UserAccount;
+import business.workqueue.StudyAbroadApplication;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gerrysu
  */
 public class RequestStudyAbroadJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private UserAccount userAccount;
+    private Enterprise enterprise;
+    
     /**
      * Creates new form RequestStudyAbroadJPanel
      */
-    public RequestStudyAbroadJPanel() {
+    public RequestStudyAbroadJPanel(JPanel userProcessContainer, UserAccount userAccount, Enterprise enterprise) {
         initComponents();
+        
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = userAccount;
+        this.enterprise = enterprise;
+        
+        txtStudentName.setText(userAccount.getEmployee().getName());
+        txtStudentName.setEnabled(false); // Read-only        
     }
 
     /**
@@ -26,19 +47,172 @@ public class RequestStudyAbroadJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnBack = new javax.swing.JButton();
+        btnSubmit = new javax.swing.JButton();
+        lblTitle = new javax.swing.JLabel();
+        lblStudentName = new javax.swing.JLabel();
+        lblMajor = new javax.swing.JLabel();
+        lblGPA = new javax.swing.JLabel();
+        lblTargetUni = new javax.swing.JLabel();
+        txtStudentName = new javax.swing.JTextField();
+        txtMajor = new javax.swing.JTextField();
+        txtGPA = new javax.swing.JTextField();
+        txtTargetUni = new javax.swing.JTextField();
+
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
+        btnSubmit.setText("Submit");
+        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubmitActionPerformed(evt);
+            }
+        });
+
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblTitle.setText("New Study Abroad Application");
+
+        lblStudentName.setText("Student Name:");
+
+        lblMajor.setText("Major:");
+
+        lblGPA.setText("Current GPA:");
+
+        lblTargetUni.setText("Target University:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(layout.createSequentialGroup()
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lblMajor)
+                                .addComponent(lblStudentName)
+                                .addComponent(lblGPA)
+                                .addComponent(lblTargetUni))
+                            .addGap(18, 18, 18)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(txtStudentName)
+                                .addComponent(txtMajor)
+                                .addComponent(txtGPA)
+                                .addComponent(txtTargetUni, javax.swing.GroupLayout.PREFERRED_SIZE, 161, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(btnBack))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(315, 315, 315)
+                                .addComponent(lblTitle))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(390, 390, 390)
+                        .addComponent(btnSubmit)))
+                .addContainerGap(380, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(lblTitle)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblStudentName)
+                    .addComponent(txtStudentName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblMajor)
+                    .addComponent(txtMajor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblGPA)
+                    .addComponent(txtGPA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTargetUni)
+                    .addComponent(txtTargetUni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(41, 41, 41)
+                .addComponent(btnSubmit)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 127, Short.MAX_VALUE)
+                .addComponent(btnBack)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+        // TODO add your handling code here:
+        // 1. Create the Work Request
+        String major = txtMajor.getText();
+        double gpa;
+        try{
+             gpa = Double.parseDouble(txtGPA.getText());
+        } catch(NumberFormatException e){
+            JOptionPane.showMessageDialog(null, "GPA must be a number.");
+            return;
+        }
+        String targetUni = txtTargetUni.getText();
+        
+        StudyAbroadApplication request = new StudyAbroadApplication();
+        request.setSender(userAccount);
+        request.setMajor(major);
+        request.setCurrentGPA(gpa);
+        request.setSelectedUniversity(targetUni);
+        request.setMessage("Application for " + targetUni);
+        request.setStatus("Pending Review");
+        
+        // 2. Find the Application Processing Organization
+        Organization org = null;
+        for (Organization organization : enterprise.getOrganizationDirectory().getOrganizationList()){
+            if (organization instanceof ApplicationProcessingOrganization){
+                org = organization;
+                break;
+            }
+        }
+        
+        // 3. Add Request to Queues
+        if (org!=null){
+            // Add to the Mobility Officer's queue (so they can see it)
+            org.getWorkQueue().getWorkRequestList().add(request);
+            // Add to the Student's own queue (so they can track it)
+            userAccount.getWorkQueue().getWorkRequestList().add(request);
+            JOptionPane.showMessageDialog(null, "Application Submitted Successfully");
+            
+            // Clear fields
+            txtMajor.setText("");
+            txtGPA.setText("");
+            txtTargetUni.setText("");
+        } else {
+            JOptionPane.showMessageDialog(null, "Error: Application Processing Organization not found.");
+        }        
+    }//GEN-LAST:event_btnSubmitActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        userProcessContainer.remove(this);
+        Component[] componentArray = userProcessContainer.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        // Could cast to StudentWorkAreaJPanel and refresh table if needed
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+    }//GEN-LAST:event_btnBackActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnSubmit;
+    private javax.swing.JLabel lblGPA;
+    private javax.swing.JLabel lblMajor;
+    private javax.swing.JLabel lblStudentName;
+    private javax.swing.JLabel lblTargetUni;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTextField txtGPA;
+    private javax.swing.JTextField txtMajor;
+    private javax.swing.JTextField txtStudentName;
+    private javax.swing.JTextField txtTargetUni;
     // End of variables declaration//GEN-END:variables
 }
