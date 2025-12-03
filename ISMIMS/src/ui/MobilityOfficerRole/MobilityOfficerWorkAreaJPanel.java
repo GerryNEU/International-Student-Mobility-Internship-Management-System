@@ -4,17 +4,57 @@
  */
 package ui.MobilityOfficerRole;
 
+import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.organization.Organization;
+import business.useraccount.UserAccount;
+import business.workqueue.StudyAbroadApplication;
+import business.workqueue.WorkRequest;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author gerrysu
  */
 public class MobilityOfficerWorkAreaJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private Organization organization;
+    private Enterprise enterprise;
+    private EcoSystem business;
     /**
      * Creates new form MobilityOfficerWorkAreaJPanel
      */
-    public MobilityOfficerWorkAreaJPanel() {
+    public MobilityOfficerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        this.business = business;
+        
+        populateTable();
+    }
+    
+    public void populateTable(){
+        DefaultTableModel model = (DefaultTableModel) tblRequests.getModel();
+        model.setRowCount(0);
+        
+        for(WorkRequest request : organization.getWorkQueue().getWorkRequestList()){
+            // Check if it is the correct type of request
+            if(request instanceof StudyAbroadApplication){
+                Object[] row = new Object[4];
+                row[0] = request; // toString() returns message
+                row[1] = request.getSender().getEmployee().getName();
+                row[2] = request.getStatus();
+                row[3] = request.getRequestDate();
+                
+                model.addRow(row);
+            }
+        }
     }
 
     /**
@@ -26,19 +66,113 @@ public class MobilityOfficerWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitle = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblRequests = new javax.swing.JTable();
+        btnApprove = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
+
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        lblTitle.setText("Mobility Officer Dashboard");
+
+        tblRequests.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Message", "Sender", "Status", "Date"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, true, true
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblRequests);
+
+        btnApprove.setText("Process Request");
+        btnApprove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApproveActionPerformed(evt);
+            }
+        });
+
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(385, 385, 385)
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(257, 257, 257)
+                        .addComponent(btnApprove)
+                        .addGap(159, 159, 159)
+                        .addComponent(btnRefresh))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(15, 15, 15)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 863, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(lblTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRefresh)
+                    .addComponent(btnApprove))
+                .addContainerGap(199, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblRequests.getSelectedRow();
+        if(selectedRow >= 0){
+            WorkRequest request = (WorkRequest)tblRequests.getValueAt(selectedRow, 0);
+            
+            // Navigate to ProcessApplicationJPanel (To be implemented)
+            // ProcessApplicationJPanel processPanel = new ProcessApplicationJPanel(userProcessContainer, request);
+            // userProcessContainer.add("ProcessApplicationJPanel", processPanel);
+            // ... next() ...
+            
+            JOptionPane.showMessageDialog(null, "Selected: " + request.getMessage() + "\n(Navigation to process panel to be implemented next)");
+            
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select a request to process.");
+        }
+    }//GEN-LAST:event_btnApproveActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        populateTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnApprove;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblRequests;
     // End of variables declaration//GEN-END:variables
 }
