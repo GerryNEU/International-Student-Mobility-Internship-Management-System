@@ -19,6 +19,6 @@ public class StudentRole extends Role {
     
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
-        return new StudentWorkAreaJPanel(); // You will need to update the constructor of JPanel to accept these parameters later
+        return new StudentWorkAreaJPanel(userProcessContainer, account, organization, enterprise, business); // You will need to update the constructor of JPanel to accept these parameters later
     }    
 }
