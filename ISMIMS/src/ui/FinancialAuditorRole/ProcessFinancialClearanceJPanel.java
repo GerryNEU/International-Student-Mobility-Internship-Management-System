@@ -4,6 +4,9 @@
  */
 package ui.FinancialAuditorRole;
 
+import business.EcoSystem;
+import business.workqueue.FinancialClearanceRequest;
+import javax.swing.JPanel;
 /**
  *
  * @author gerrysu
@@ -13,10 +16,34 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
     /**
      * Creates new form ProcessFinancialClearanceJPanel
      */
-    public ProcessFinancialClearanceJPanel() {
+    private JPanel userProcessContainer;
+    private FinancialClearanceRequest request;
+    private EcoSystem system;
+    
+    public ProcessFinancialClearanceJPanel(JPanel userProcessContainer,
+                                            FinancialClearanceRequest request, 
+                                            EcoSystem system) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.request = request;
+        this.system = system;
+        
+        populateData();
     }
 
+    private void populateData() {
+        // Get the linked StudyAbroadApplication from FinancialClearanceRequest
+        business.workqueue.StudyAbroadApplication app = request.getStudentApplication();
+        
+        if (app != null) {
+            // You need to add these text fields in Design mode first
+            // txtStudent.setText(app.getSender().getEmployee().getName());
+            // txtMajor.setText(app.getMajor());
+            // txtTargetUni.setText(app.getSelectedUniversity());
+        }
+        
+        // txtGrantRequested.setText(String.valueOf(request.getGrantAmountRequested()));
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always

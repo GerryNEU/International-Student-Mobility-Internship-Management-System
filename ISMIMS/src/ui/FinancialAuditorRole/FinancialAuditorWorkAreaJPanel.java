@@ -5,10 +5,13 @@
 package ui.FinancialAuditorRole;
 
 import business.EcoSystem;
-import business.enterprise.Enterprise;
 import business.organization.Organization;
 import business.useraccount.UserAccount;
+import business.workqueue.FinancialClearanceRequest;
+import business.workqueue.WorkRequest;
+import java.awt.CardLayout;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -19,22 +22,48 @@ public class FinancialAuditorWorkAreaJPanel extends javax.swing.JPanel {
     private JPanel userProcessContainer;
     private UserAccount account;
     private Organization organization;
-    private Enterprise enterprise;
-    private EcoSystem business;
+    private EcoSystem system;
+
+
     
     /**
      * Creates new form FinancialAuditorWorkAreaJPanel
      */
-    public FinancialAuditorWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
+    public FinancialAuditorWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization,  EcoSystem system) {
               
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.account = account;
         this.organization = organization;
-        this.enterprise = enterprise;
-        this.business = business;
-    }
+        this.system = system;
 
+        populateTable();
+    }
+    public void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblWorkQueue.getModel();
+        model.setRowCount(0); // Clear existing rows
+
+        // Get all FinancialClearanceRequest from organization's work queue
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof FinancialClearanceRequest) {
+                FinancialClearanceRequest fcr = (FinancialClearanceRequest) request;
+
+                // Get student name from the linked application
+                String studentName = "N/A";
+                if (fcr.getStudentApplication() != null && 
+                    fcr.getStudentApplication().getSender() != null) {
+                    studentName = fcr.getStudentApplication().getSender().getEmployee().getName();
+                }
+
+                Object[] row = new Object[4];
+                row[0] = fcr; // Store the whole object for later use
+                row[1] = studentName;
+                row[2] = fcr.getStatus();
+                row[3] = fcr.getMessage();
+                model.addRow(row);
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -44,30 +73,103 @@ public class FinancialAuditorWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblWorkQueue = new javax.swing.JTable();
+        btnProcess = new javax.swing.JButton();
 
-        jLabel1.setText("Financial Auditor Dashboard");
+        lblTitle.setFont(new java.awt.Font("Microsoft YaHei UI", 1, 24)); // NOI18N
+        lblTitle.setText("Financial Auditor Work Area");
+
+        tblWorkQueue.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Request ID", "Student Name", "Status", "Message"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.String.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, true, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane2.setViewportView(tblWorkQueue);
+
+        btnProcess.setText("Process Request");
+        btnProcess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProcessActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(135, 135, 135)
-                .addComponent(jLabel1)
-                .addContainerGap(101, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(168, 168, 168)
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnProcess)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 623, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(50, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(122, 122, 122)
-                .addComponent(jLabel1)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addGap(45, 45, 45)
+                .addComponent(lblTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 58, Short.MAX_VALUE)
+                .addComponent(btnProcess)
+                .addGap(56, 56, 56))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
+        int selectedRow = tblWorkQueue.getSelectedRow();
+        if (selectedRow < 0) {
+            javax.swing.JOptionPane.showMessageDialog(null, 
+                "Please select a request to process.");
+            return;
+        }
+
+        // Get the request object from the first column
+        FinancialClearanceRequest request = (FinancialClearanceRequest) 
+            tblWorkQueue.getValueAt(selectedRow, 0);
+
+        // Create and navigate to process panel
+        ProcessFinancialClearanceJPanel panel = new ProcessFinancialClearanceJPanel(
+            userProcessContainer, request, system);
+        userProcessContainer.add("ProcessFinancialClearance", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnProcessActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnProcess;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblWorkQueue;
     // End of variables declaration//GEN-END:variables
 }

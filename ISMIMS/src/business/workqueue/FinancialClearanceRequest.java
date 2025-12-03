@@ -14,6 +14,7 @@ public class FinancialClearanceRequest extends WorkRequest {
     private double approvedAmount;
     private boolean auditPassed;
     private String financialProofPath; // Path to bank statement file
+    private StudyAbroadApplication studentApplication;
 
     public double getGrantAmountRequested() {
         return grantAmountRequested;
@@ -46,4 +47,11 @@ public class FinancialClearanceRequest extends WorkRequest {
     public void setFinancialProofPath(String financialProofPath) {
         this.financialProofPath = financialProofPath;
     }    
+    public StudyAbroadApplication getStudentApplication() {
+        return studentApplication;
+    }
+
+    public void setStudentApplication(StudyAbroadApplication studentApplication) {
+        this.studentApplication = studentApplication;
+    }
 }
