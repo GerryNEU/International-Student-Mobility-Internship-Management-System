@@ -4,17 +4,38 @@
  */
 package ui.StudentRole;
 
+import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.organization.Organization;
+import business.useraccount.UserAccount;
+import java.awt.CardLayout;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gerrysu
  */
 public class StudentWorkAreaJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private UserAccount userAccount;
+    private Organization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;    
+    
     /**
      * Creates new form StudentWorkAreaJPanel
      */
-    public StudentWorkAreaJPanel() {
+    public StudentWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.userAccount = account;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        this.system = system;
+        
+        lblValue.setText(enterprise != null ? enterprise.getName() : "N/A");        
+  
     }
 
     /**
@@ -26,19 +47,91 @@ public class StudentWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnApply = new javax.swing.JButton();
+        btnStatus = new javax.swing.JButton();
+        lblTitle = new javax.swing.JLabel();
+        lblEnterprise = new javax.swing.JLabel();
+        lblValue = new javax.swing.JLabel();
+
+        btnApply.setText("Request Study Abroad");
+        btnApply.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApplyActionPerformed(evt);
+            }
+        });
+
+        btnStatus.setText("View Application Status");
+        btnStatus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnStatusActionPerformed(evt);
+            }
+        });
+
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        lblTitle.setText("Student Work Area");
+
+        lblEnterprise.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblEnterprise.setText("Enterprise:");
+
+        lblValue.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblValue.setText("<value>");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(223, 223, 223)
+                        .addComponent(btnApply)
+                        .addGap(37, 37, 37)
+                        .addComponent(btnStatus))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(208, 208, 208)
+                        .addComponent(lblEnterprise)
+                        .addGap(138, 138, 138)
+                        .addComponent(lblValue))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(316, 316, 316)
+                        .addComponent(lblTitle)))
+                .addContainerGap(309, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(71, 71, 71)
+                .addComponent(lblTitle)
+                .addGap(81, 81, 81)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnApply)
+                    .addComponent(btnStatus))
+                .addGap(96, 96, 96)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEnterprise)
+                    .addComponent(lblValue))
+                .addContainerGap(402, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplyActionPerformed
+        // TODO add your handling code here:
+        RequestStudyAbroadJPanel requestPanel = new RequestStudyAbroadJPanel(userProcessContainer, userAccount, enterprise);
+        userProcessContainer.add("RequestStudyAbroadJPanel", requestPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnApplyActionPerformed
+
+    private void btnStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnStatusActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnApply;
+    private javax.swing.JButton btnStatus;
+    private javax.swing.JLabel lblEnterprise;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblValue;
     // End of variables declaration//GEN-END:variables
 }
