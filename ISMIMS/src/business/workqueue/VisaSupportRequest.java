@@ -8,6 +8,72 @@ package business.workqueue;
  *
  * @author gerrysu
  */
-public class VisaSupportRequest {
+public class VisaSupportRequest extends WorkRequest {
+
+    private String passportNumber;
+    private String issuingCountry;
+    private boolean legalCheckPassed;
+    private boolean financialProofVerified;
+    private boolean visaIssued;
+    private String visaNumber;
+
+    public VisaSupportRequest() {
+        super();
+        legalCheckPassed = false;
+        financialProofVerified = false;
+        visaIssued = false;
+    }
+
+    public String getPassportNumber() {
+        return passportNumber;
+    }
+
+    public void setPassportNumber(String passportNumber) {
+        this.passportNumber = passportNumber;
+    }
+
+    public String getIssuingCountry() {
+        return issuingCountry;
+    }
+
+    public void setIssuingCountry(String issuingCountry) {
+        this.issuingCountry = issuingCountry;
+    }
+
+    public boolean isLegalCheckPassed() {
+        return legalCheckPassed;
+    }
+
+    public void setLegalCheckPassed(boolean legalCheckPassed) {
+        this.legalCheckPassed = legalCheckPassed;
+    }
+
+    public boolean isFinancialProofVerified() {
+        return financialProofVerified;
+    }
+
+    public void setFinancialProofVerified(boolean financialProofVerified) {
+        this.financialProofVerified = financialProofVerified;
+    }
+
+    public boolean isVisaIssued() {
+        return visaIssued;
+    }
+
+    public void setVisaIssued(boolean visaIssued) {
+        this.visaIssued = visaIssued;
+    }
+
+    public String getVisaNumber() {
+        return visaNumber;
+    }
+
+    public void setVisaNumber(String visaNumber) {
+        this.visaNumber = visaNumber;
+    }
     
+    @Override
+    public String toString() {
+        return "Visa Request for " + (getSender() != null ? getSender().getUsername() : "Unknown");
+    }    
 }
