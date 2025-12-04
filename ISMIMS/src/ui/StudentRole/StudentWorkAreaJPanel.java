@@ -124,7 +124,7 @@ public class StudentWorkAreaJPanel extends javax.swing.JPanel {
 
     private void btnStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStatusActionPerformed
         // TODO add your handling code here:
-        ViewApplicationStatusJPanel viewPanel = new ViewApplicationStatusJPanel(userProcessContainer, userAccount);
+        ViewApplicationStatusJPanel viewPanel = new ViewApplicationStatusJPanel(userProcessContainer, userAccount, system);
         userProcessContainer.add("ViewApplicationStatusJPanel", viewPanel);
         CardLayout layout = (CardLayout) userProcessContainer.getLayout();
         layout.next(userProcessContainer);
