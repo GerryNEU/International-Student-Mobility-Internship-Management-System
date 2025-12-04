@@ -4,10 +4,12 @@
  */
 package ui.StudentRole;
 
+import business.EcoSystem;
 import business.useraccount.UserAccount;
 import business.workqueue.StudyAbroadApplication;
 import business.workqueue.WorkRequest;
 import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
@@ -19,37 +21,69 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
 
     private JPanel userProcessContainer;
     private UserAccount userAccount;
+    private EcoSystem system;
     
     /**
      * Creates new form ViewApplicationStatusJPanel
      */
-    public ViewApplicationStatusJPanel(JPanel userProcessContainer, UserAccount userAccount) {
+    public ViewApplicationStatusJPanel(JPanel userProcessContainer, UserAccount userAccount, EcoSystem system) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.userAccount = userAccount;
+        this.system = system;
         
         populateTable();
-        btnRequestVisa.setEnabled(false); // Default disabled
     }
     
     private void populateTable(){
+        btnRequestVisa.setEnabled(false); // Default disabled
+        btnAccept.setEnabled(false); // Default disablee);
+        
         DefaultTableModel model = (DefaultTableModel) tblStatus.getModel();
         model.setRowCount(0);
         
+        boolean hasAcceptedOffer = false;
+        boolean hasAdmittedApps = false;
+        
+        // 1. First Pass: Check overall state
         for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()){
             if(request instanceof StudyAbroadApplication){
+                // Check if student has already committed to a university
+                String status = request.getStatus();
+                if("Offer Accepted".equals(status) || "Visa Issued".equals(status) || "Visa Applied".equals(status)){
+                    hasAcceptedOffer = true;
+                }
+                if("Admitted".equals(status)){
+                    hasAdmittedApps = true;
+                }
+                
                 Object[] row = new Object[4];
                 row[0] = request;
                 row[1] = ((StudyAbroadApplication) request).getSelectedUniversity();
-                row[2] = request.getStatus();
+                row[2] = status;
                 row[3] = ((StudyAbroadApplication) request).getResult();
                 
                 model.addRow(row);
-                
-                // Check if admitted to enable Visa button
-                if("Admitted".equals(request.getStatus())){
-                    btnRequestVisa.setEnabled(true);
-                }
+            }
+        }
+        
+        // 2. Second Pass: Set Button State based on "Single Acceptance" Rule
+        // This logic MUST be outside the loop to consider the aggregate state of all applications
+        if(hasAcceptedOffer){
+          
+            // If they have accepted ANY offer, they cannot accept another one.
+            btnAccept.setEnabled(false); 
+            // They can proceed to visa (logic in button action will ensure they select the right row)
+            btnRequestVisa.setEnabled(true); 
+        } else {
+            // No offer accepted yet.
+            btnRequestVisa.setEnabled(false); // Cannot apply for visa yet
+            
+            // Can only accept if they have at least one admission
+            if(hasAdmittedApps){
+                btnAccept.setEnabled(true);
+            } else {
+                btnAccept.setEnabled(false);
             }
         }
     }
@@ -68,6 +102,7 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblStatus = new javax.swing.JTable();
         btnRequestVisa = new javax.swing.JButton();
+        btnAccept = new javax.swing.JButton();
 
         btnBack.setText("<< Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
@@ -106,25 +141,36 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnAccept.setText("Accept Offer");
+        btnAccept.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAcceptActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(375, 375, 375)
-                        .addComponent(lblTitle))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btnBack))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(351, 351, 351)
-                        .addComponent(btnRequestVisa))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(140, 140, 140)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(85, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(375, 375, 375)
+                                .addComponent(lblTitle))
+                            .addComponent(btnBack)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(140, 140, 140)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(85, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnAccept)
+                        .addGap(108, 108, 108)
+                        .addComponent(btnRequestVisa)
+                        .addGap(242, 242, 242))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -133,9 +179,11 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
                 .addComponent(lblTitle)
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(btnRequestVisa)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 154, Short.MAX_VALUE)
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRequestVisa)
+                    .addComponent(btnAccept))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 151, Short.MAX_VALUE)
                 .addComponent(btnBack)
                 .addContainerGap())
         );
@@ -143,6 +191,24 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
 
     private void btnRequestVisaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRequestVisaActionPerformed
         // TODO add your handling code here:
+        int selectedRow = tblStatus.getSelectedRow();
+        if(selectedRow < 0){
+             JOptionPane.showMessageDialog(null, "Please select your accepted application.");
+             return;
+        }
+        
+        StudyAbroadApplication request = (StudyAbroadApplication)tblStatus.getValueAt(selectedRow, 0);
+        
+        // Strict Check: Can only apply for visa for the ACCEPTED offer
+        if(!"Offer Accepted".equals(request.getStatus())){
+             JOptionPane.showMessageDialog(null, "You must accept an offer before requesting a visa, and you must select that specific application.");
+             return;
+        }
+        
+        RequestVisaJPanel visaPanel = new RequestVisaJPanel(userProcessContainer, userAccount, system);
+        userProcessContainer.add("RequestVisaJPanel", visaPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnRequestVisaActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
@@ -152,8 +218,31 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
         layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
+    private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
+        int selectedRow = tblStatus.getSelectedRow();
+        if(selectedRow >= 0){
+            StudyAbroadApplication request = (StudyAbroadApplication)tblStatus.getValueAt(selectedRow, 0);
+            
+            if("Admitted".equals(request.getStatus())){
+                // Confirm user intent
+                int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to accept this offer? You will NOT be able to accept other offers.", "Warning", JOptionPane.YES_NO_OPTION);
+                if(dialogResult == JOptionPane.YES_OPTION){
+                    request.setStatus("Offer Accepted");
+                    request.setResult("Offer Accepted by Student");
+                    JOptionPane.showMessageDialog(null, "Offer Accepted! You may now request a visa.");
+                    populateTable(); // Refresh UI to lock other buttons
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "You can only accept 'Admitted' applications.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Please select an application.");
+        }
+    }//GEN-LAST:event_btnAcceptActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAccept;
     private javax.swing.JButton btnBack;
     private javax.swing.JButton btnRequestVisa;
     private javax.swing.JScrollPane jScrollPane1;
