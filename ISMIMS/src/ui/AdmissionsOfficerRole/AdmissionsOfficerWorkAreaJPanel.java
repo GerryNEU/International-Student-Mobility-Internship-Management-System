@@ -25,37 +25,55 @@ public class AdmissionsOfficerWorkAreaJPanel extends javax.swing.JPanel {
     private UserAccount account;
     private Organization organization;
     private Enterprise enterprise;
-    private EcoSystem business;
+    private EcoSystem system;
     
     /**
      * Creates new form AdmissionsOfficerWorkAreaJPanel
      */
-    public AdmissionsOfficerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
+    public AdmissionsOfficerWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
         
         this.userProcessContainer = userProcessContainer;
         this.account = account;
         this.organization = organization;
         this.enterprise = enterprise;
-        this.business = business;
+        this.system = system;
         
         populateTable();
     }
     
     public void populateTable(){
-        DefaultTableModel model = (DefaultTableModel) tblNominations.getModel();
-        model.setRowCount(0);
+        DefaultTableModel model = (DefaultTableModel) tblWorkQueue.getModel();
+        model.setRowCount(0); // Clear existing rows
         
-        for(WorkRequest request : organization.getWorkQueue().getWorkRequestList()){
-            if(request instanceof NominationRequest){
-                NominationRequest nom = (NominationRequest) request;
-                Object[] row = new Object[4];
-                row[0] = nom;
-                // Get the name from the original student application
-                row[1] = nom.getStudentApplication().getSender().getEmployee().getName();
-                row[2] = nom.getStatus();
-                row[3] = nom.getRequestDate();
+        // Get all NominationRequest from organization's work queue
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof NominationRequest) {
+                NominationRequest nr = (NominationRequest) request;
                 
+                // Get student information
+                String studentName = "N/A";
+                String homeUni = "N/A";
+                
+                if (nr.getStudentApplication() != null) {
+                    business.workqueue.StudyAbroadApplication app = nr.getStudentApplication();
+                    
+                    if (app.getSender() != null && 
+                        app.getSender().getEmployee() != null) {
+                        studentName = app.getSender().getEmployee().getName();
+                    }
+                    
+                    // Try to get home university name
+                    // (This might need adjustment based on your data structure)
+                    homeUni = "Home University";
+                }
+                
+                Object[] row = new Object[5];
+                row[0] = nr; // Store the whole object for later use
+                row[1] = studentName;
+                row[2] = homeUni;
+                row[3] = nr.getStatus();
+                row[4] = nr.getMessage();
                 model.addRow(row);
             }
         }
@@ -72,45 +90,37 @@ public class AdmissionsOfficerWorkAreaJPanel extends javax.swing.JPanel {
 
         lblTitle = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tblNominations = new javax.swing.JTable();
-        btnEvaluate = new javax.swing.JButton();
-        btnRefresh = new javax.swing.JButton();
+        tblWorkQueue = new javax.swing.JTable();
+        btnProcess = new javax.swing.JButton();
 
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
-        lblTitle.setText("Admissions Officer Dashboard");
+        lblTitle.setText("Admissions Officer Work Area");
 
-        tblNominations.setModel(new javax.swing.table.DefaultTableModel(
+        tblWorkQueue.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Message", "Student Name", "Status", "Date"
+                "Request ID", "Student Name", "Home University", "Status", "Message"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, true, false
+                false, false, true, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(tblNominations);
+        jScrollPane1.setViewportView(tblWorkQueue);
 
-        btnEvaluate.setText("Evaluate Nomination");
-        btnEvaluate.addActionListener(new java.awt.event.ActionListener() {
+        btnProcess.setText("Process Nomination");
+        btnProcess.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnEvaluateActionPerformed(evt);
-            }
-        });
-
-        btnRefresh.setText("Refresh");
-        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRefreshActionPerformed(evt);
+                btnProcessActionPerformed(evt);
             }
         });
 
@@ -123,16 +133,13 @@ public class AdmissionsOfficerWorkAreaJPanel extends javax.swing.JPanel {
                 .addComponent(lblTitle)
                 .addGap(287, 287, 287))
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(228, 228, 228)
-                        .addComponent(btnEvaluate)
-                        .addGap(211, 211, 211)
-                        .addComponent(btnRefresh))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(160, 160, 160)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(160, 160, 160)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 580, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(160, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(187, 187, 187)
+                .addComponent(btnProcess)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -142,40 +149,37 @@ public class AdmissionsOfficerWorkAreaJPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnEvaluate)
-                    .addComponent(btnRefresh))
+                .addComponent(btnProcess)
                 .addContainerGap(170, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnEvaluateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEvaluateActionPerformed
+    private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
         // TODO add your handling code here:
-        int selectedRow = tblNominations.getSelectedRow();
-        if(selectedRow >= 0){
-            NominationRequest request = (NominationRequest)tblNominations.getValueAt(selectedRow, 0);
-            
-            ProcessNominationJPanel processPanel = new ProcessNominationJPanel(userProcessContainer, request);
-            userProcessContainer.add("ProcessNominationJPanel", processPanel);
-            CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-            layout.next(userProcessContainer);
-            
-        } else {
-            JOptionPane.showMessageDialog(null, "Please select a nomination to evaluate.");
+        int selectedRow = tblWorkQueue.getSelectedRow();
+        if (selectedRow < 0) {
+            javax.swing.JOptionPane.showMessageDialog(null, 
+                "Please select a nomination to process.");
+            return;
         }
-    }//GEN-LAST:event_btnEvaluateActionPerformed
 
-    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        // TODO add your handling code here:
-        populateTable();
-    }//GEN-LAST:event_btnRefreshActionPerformed
+        // Get the request object from the first column
+        NominationRequest request = (NominationRequest) 
+            tblWorkQueue.getValueAt(selectedRow, 0);
+
+        // Create and navigate to process panel
+        ProcessNominationJPanel panel = new ProcessNominationJPanel(
+            userProcessContainer, request, enterprise, system);
+        userProcessContainer.add("ProcessNomination", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnProcessActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnEvaluate;
-    private javax.swing.JButton btnRefresh;
+    private javax.swing.JButton btnProcess;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTitle;
-    private javax.swing.JTable tblNominations;
+    private javax.swing.JTable tblWorkQueue;
     // End of variables declaration//GEN-END:variables
 }
