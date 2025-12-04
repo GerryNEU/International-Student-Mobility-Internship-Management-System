@@ -5,6 +5,7 @@
 package ui.FinancialAuditorRole;
 
 import business.EcoSystem;
+import business.enterprise.Enterprise;
 import business.organization.Organization;
 import business.useraccount.UserAccount;
 import business.workqueue.FinancialClearanceRequest;
@@ -23,18 +24,20 @@ public class FinancialAuditorWorkAreaJPanel extends javax.swing.JPanel {
     private UserAccount account;
     private Organization organization;
     private EcoSystem system;
+    private Enterprise enterprise;
 
 
     
     /**
      * Creates new form FinancialAuditorWorkAreaJPanel
      */
-    public FinancialAuditorWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization,  EcoSystem system) {
+    public FinancialAuditorWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise,  EcoSystem system) {
               
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.account = account;
         this.organization = organization;
+        this.enterprise = enterprise;
         this.system = system;
 
         populateTable();
