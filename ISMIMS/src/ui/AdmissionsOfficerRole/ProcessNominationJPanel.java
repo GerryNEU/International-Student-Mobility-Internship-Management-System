@@ -4,6 +4,8 @@
  */
 package ui.AdmissionsOfficerRole;
 
+import business.EcoSystem;
+import business.enterprise.Enterprise;
 import business.workqueue.NominationRequest;
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -18,14 +20,18 @@ public class ProcessNominationJPanel extends javax.swing.JPanel {
     
     private JPanel userProcessContainer;
     private NominationRequest request;
+    private Enterprise currentEnterprise;  
+    private EcoSystem system;              
 
     /**
      * Creates new form ProcessNominationJPanel
      */
-    public ProcessNominationJPanel(JPanel userProcessContainer, NominationRequest request) {
+    public ProcessNominationJPanel(JPanel userProcessContainer, NominationRequest request, Enterprise currentEnterprise, EcoSystem system) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.request = request;
+        this.currentEnterprise = currentEnterprise;
+        this.system = system; 
         
         populateData();
     }
