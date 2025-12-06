@@ -9,6 +9,11 @@ import business.enterprise.Enterprise;
 import business.organization.Organization;
 import business.useraccount.UserAccount;
 import javax.swing.JPanel;
+import business.workqueue.CourseTransferRequest;
+import business.workqueue.WorkRequest;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
+import java.awt.CardLayout;
 
 /**
  *
@@ -32,8 +37,36 @@ public class RegistrarWorkAreaJPanel extends javax.swing.JPanel {
         this.organization = organization;
         this.enterprise = enterprise;
         this.business = business;
+        populateTable();
     }
+    public void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblWorkQueue.getModel();
+        model.setRowCount(0); // Clear existing rows
 
+        // Get all CourseTransferRequest from organization's work queue
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof CourseTransferRequest) {
+                CourseTransferRequest ctr = (CourseTransferRequest) request;
+
+                // Get student name
+                String studentName = "N/A";
+                if (ctr.getSender() != null && ctr.getSender().getEmployee() != null) {
+                    studentName = ctr.getSender().getEmployee().getName();
+                }
+
+                // Get courses requested (adjust based on actual field)
+                String courses = "Course Info";  
+
+                Object[] row = new Object[5];
+                row[0] = ctr; // Store the whole object
+                row[1] = studentName;
+                row[2] = courses;
+                row[3] = ctr.getStatus();
+                row[4] = ctr.getMessage();
+                model.addRow(row);
+            }
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -43,30 +76,89 @@ public class RegistrarWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblWorkQueue = new javax.swing.JTable();
+        btnProcessTransfer = new javax.swing.JButton();
 
-        jLabel1.setText("Registrar Dashboard");
+        lblTitle.setFont(new java.awt.Font("Microsoft YaHei UI", 1, 24)); // NOI18N
+        lblTitle.setText("Registrar Work Area");
+
+        tblWorkQueue.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Request ID", "Student Name", "Courses Requested", "Status", "Message"
+            }
+        ));
+        jScrollPane2.setViewportView(tblWorkQueue);
+
+        btnProcessTransfer.setText("Process Course Transfer");
+        btnProcessTransfer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProcessTransferActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(148, 148, 148)
-                .addComponent(jLabel1)
-                .addContainerGap(132, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 704, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(242, 242, 242)
+                        .addComponent(lblTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 254, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(74, 74, 74)
+                        .addComponent(btnProcessTransfer)))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(131, 131, 131)
-                .addComponent(jLabel1)
-                .addContainerGap(152, Short.MAX_VALUE))
+                .addGap(35, 35, 35)
+                .addComponent(lblTitle)
+                .addGap(28, 28, 28)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 407, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(42, 42, 42)
+                .addComponent(btnProcessTransfer)
+                .addContainerGap(65, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnProcessTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessTransferActionPerformed
+       int selectedRow = tblWorkQueue.getSelectedRow();
+       if (selectedRow < 0) {
+           JOptionPane.showMessageDialog(null, 
+               "Please select a course transfer request to process.");
+           return;
+       }
+
+       // Get the request object from the first column
+       CourseTransferRequest request = (CourseTransferRequest) 
+           tblWorkQueue.getValueAt(selectedRow, 0);
+
+       // Navigate to process panel
+       ProcessCourseTransferJPanel panel = new ProcessCourseTransferJPanel(
+           userProcessContainer, request, business);
+       userProcessContainer.add("ProcessCourseTransfer", panel);
+       CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+       layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnProcessTransferActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnProcessTransfer;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblWorkQueue;
     // End of variables declaration//GEN-END:variables
 }
