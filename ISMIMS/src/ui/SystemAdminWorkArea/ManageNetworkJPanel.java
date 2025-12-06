@@ -6,10 +6,10 @@ package ui.SystemAdminWorkArea;
 
 import business.EcoSystem;
 import business.network.Network;
+import java.awt.CardLayout;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author gerrysu
@@ -59,6 +59,11 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
         btnDeleteNetwork = new javax.swing.JButton();
 
         btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         lblTitle.setText("Manage Networks");
@@ -194,6 +199,13 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
     }
 
     }//GEN-LAST:event_btnDeleteNetworkActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        userProcessContainer.remove(this);
+    CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+    layout.show(userProcessContainer, "workArea");
+    }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
