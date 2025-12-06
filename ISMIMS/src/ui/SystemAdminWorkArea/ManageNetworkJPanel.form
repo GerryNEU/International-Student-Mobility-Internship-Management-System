@@ -78,7 +78,7 @@
   <SubComponents>
     <Component class="javax.swing.JButton" name="btnBack">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&lt;&lt; BACK"/>
+        <Property name="text" type="java.lang.String" value="&lt;&lt; Back"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="lblTitle">
@@ -131,19 +131,22 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtNetworkName">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="btnAddNetwork">
       <Properties>
         <Property name="text" type="java.lang.String" value="AddNetwork"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddNetworkActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnDeleteNetwork">
       <Properties>
         <Property name="text" type="java.lang.String" value="DeleteNetwork"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteNetworkActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -5,7 +5,10 @@
 package ui.SystemAdminWorkArea;
 
 import business.EcoSystem;
+import business.network.Network;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -22,7 +25,21 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
     initComponents();
     this.userProcessContainer = userProcessContainer;
     this.system = system;
+    
+    populateTable();
 }
+   private void populateTable() {
+    DefaultTableModel model = (DefaultTableModel) tblNetworks.getModel();
+    model.setRowCount(0);
+    
+    for (Network network : system.getNetworkList()) {
+        Object[] row = new Object[2];
+        row[0] = network.getName();
+        row[1] = network.getEnterpriseDirectory().getEnterpriseList().size();
+        model.addRow(row);
+    }
+}
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -41,7 +58,7 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
         btnAddNetwork = new javax.swing.JButton();
         btnDeleteNetwork = new javax.swing.JButton();
 
-        btnBack.setText("<< BACK");
+        btnBack.setText("<< Back");
 
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         lblTitle.setText("Manage Networks");
@@ -62,11 +79,19 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
         lblNetworkName.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         lblNetworkName.setText("Network Name :");
 
-        txtNetworkName.setText("jTextField1");
-
         btnAddNetwork.setText("AddNetwork");
+        btnAddNetwork.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddNetworkActionPerformed(evt);
+            }
+        });
 
         btnDeleteNetwork.setText("DeleteNetwork");
+        btnDeleteNetwork.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteNetworkActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -117,6 +142,58 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
                 .addContainerGap(74, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnAddNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNetworkActionPerformed
+        // TODO add your handling code here:
+        String networkName = txtNetworkName.getText().trim();
+    
+    if (networkName.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter a network name.");
+        return;
+    }
+    
+    Network network = system.createAndAddNetwork();
+    network.setName(networkName);
+    
+    txtNetworkName.setText("");
+    populateTable();
+    JOptionPane.showMessageDialog(this, "Network '" + networkName + "' created successfully!");
+
+    }//GEN-LAST:event_btnAddNetworkActionPerformed
+
+    private void btnDeleteNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteNetworkActionPerformed
+        // TODO add your handling code here:
+    int selectedRow = tblNetworks.getSelectedRow();
+    
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a network to delete.");
+        return;
+    }
+    
+    String networkName = (String) tblNetworks.getValueAt(selectedRow, 0);
+    
+    int confirm = JOptionPane.showConfirmDialog(this, 
+            "Are you sure you want to delete '" + networkName + "'?",
+            "Confirm Delete", 
+            JOptionPane.YES_NO_OPTION);
+    
+    if (confirm == JOptionPane.YES_OPTION) {
+        // Find and remove the network
+        Network toRemove = null;
+        for (Network n : system.getNetworkList()) {
+            if (n.getName().equals(networkName)) {
+                toRemove = n;
+                break;
+            }
+        }
+        if (toRemove != null) {
+            system.getNetworkList().remove(toRemove);
+            populateTable();
+            JOptionPane.showMessageDialog(this, "Network deleted successfully!");
+        }
+    }
+
+    }//GEN-LAST:event_btnDeleteNetworkActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
