@@ -20,13 +20,14 @@ public class FinancialAuditorRole extends Role {
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, 
                                 UserAccount account, 
-                                Organization organisation, 
+                                Organization organization, 
                                 Enterprise enterprise, 
                                 EcoSystem business) {
         return new FinancialAuditorWorkAreaJPanel(
             userProcessContainer, 
             account, 
-            organisation, 
+            organization, 
+            enterprise,
             business
         );
     }    
