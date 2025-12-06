@@ -79,8 +79,6 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
         lblNetworkName.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         lblNetworkName.setText("Network Name :");
 
-        txtNetworkName.setText("jTextField1");
-
         btnAddNetwork.setText("AddNetwork");
         btnAddNetwork.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
