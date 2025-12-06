@@ -139,11 +139,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="AddNetwork"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddNetworkActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnDeleteNetwork">
       <Properties>
         <Property name="text" type="java.lang.String" value="DeleteNetwork"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteNetworkActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>
