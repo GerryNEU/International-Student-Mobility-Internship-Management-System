@@ -3,7 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
  */
 package ui.RegistrarRole;
-
+import business.EcoSystem;
+import business.workqueue.CourseTransferRequest;
+import javax.swing.JPanel;
 /**
  *
  * @author gerrysu
@@ -13,8 +15,17 @@ public class ProcessCourseTransferJPanel extends javax.swing.JPanel {
     /**
      * Creates new form ProcessCourseTransferJPanel
      */
-    public ProcessCourseTransferJPanel() {
+    private JPanel userProcessContainer;
+    private CourseTransferRequest request;
+    private EcoSystem system;
+    
+    public ProcessCourseTransferJPanel(JPanel userProcessContainer,
+                                    CourseTransferRequest request,
+                                    EcoSystem system) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.request = request;
+        this.system = system;
     }
 
     /**
