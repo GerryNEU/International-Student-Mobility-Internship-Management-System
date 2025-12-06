@@ -48,8 +48,8 @@
                               </Group>
                               <EmptySpace min="-2" pref="110" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                  <Component id="txtEntName" pref="192" max="32767" attributes="0"/>
-                                  <Component id="cmbEntType" max="32767" attributes="0"/>
+                                  <Component id="txtEntName" max="32767" attributes="0"/>
+                                  <Component id="cmbEntType" pref="192" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -102,6 +102,9 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="&lt;&lt; Back"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="lblTitle">
       <Properties>
@@ -187,9 +190,6 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtEntName">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="jTextField1"/>
-      </Properties>
     </Component>
     <Component class="javax.swing.JComboBox" name="cmbEntType">
       <Properties>
@@ -210,11 +210,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="AddEnterprise"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnAddEnterpriseActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="btnDeleteEnterprise">
       <Properties>
         <Property name="text" type="java.lang.String" value="DeleteEnterprise"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteEnterpriseActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -5,7 +5,12 @@
 package ui.SystemAdminWorkArea;
 
 import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.network.Network;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -24,7 +29,52 @@ public ManageEnterpriseJPanel(JPanel userProcessContainer, EcoSystem system) {
     initComponents();
     this.userProcessContainer = userProcessContainer;
     this.system = system;
+    
+    populateNetworkComboBox();
+    populateEnterpriseTypeComboBox();
+    populateTable();
 }
+
+private void populateNetworkComboBox() {
+    cmbNetwork.removeAllItems();
+    for (Network network : system.getNetworkList()) {
+        cmbNetwork.addItem(network.getName());
+    }
+}
+
+private void populateEnterpriseTypeComboBox() {
+    cmbEntType.removeAllItems();
+    for (Enterprise.EnterpriseType type : Enterprise.EnterpriseType.values()) {
+        cmbEntType.addItem(type.getValue());
+    }
+}
+
+private void populateTable() {
+     DefaultTableModel model = (DefaultTableModel) tblEnterprises.getModel();
+    model.setRowCount(0);
+    
+    String selectedNetworkName = (String) cmbNetwork.getSelectedItem();
+    if (selectedNetworkName == null) return;
+    
+    Network selectedNetwork = null;
+    for (Network n : system.getNetworkList()) {
+        if (n.getName().equals(selectedNetworkName)) {
+            selectedNetwork = n;
+            break;
+        }
+    }
+    if (selectedNetwork == null) return;
+    
+    for (Enterprise enterprise : selectedNetwork.getEnterpriseDirectory().getEnterpriseList()) {
+        Object[] row = new Object[3];
+        row[0] = enterprise.getName();
+        row[1] = enterprise.getClass().getSimpleName().replace("Enterprise", "");
+        row[2] = enterprise.getOrganizationDirectory().getOrganizationList().size();
+        model.addRow(row);
+    }
+}
+
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -48,6 +98,11 @@ public ManageEnterpriseJPanel(JPanel userProcessContainer, EcoSystem system) {
         btnDeleteEnterprise = new javax.swing.JButton();
 
         btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         lblTitle.setText("Manage Enterprises");
@@ -79,13 +134,21 @@ public ManageEnterpriseJPanel(JPanel userProcessContainer, EcoSystem system) {
 
         lblEntType.setText("Type :");
 
-        txtEntName.setText("jTextField1");
-
         cmbEntType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         btnAddEnterprise.setText("AddEnterprise");
+        btnAddEnterprise.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddEnterpriseActionPerformed(evt);
+            }
+        });
 
         btnDeleteEnterprise.setText("DeleteEnterprise");
+        btnDeleteEnterprise.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteEnterpriseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -117,8 +180,8 @@ public ManageEnterpriseJPanel(JPanel userProcessContainer, EcoSystem system) {
                                     .addComponent(lblEntType))
                                 .addGap(110, 110, 110)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(txtEntName, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
-                                    .addComponent(cmbEntType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                    .addComponent(txtEntName)
+                                    .addComponent(cmbEntType, 0, 192, Short.MAX_VALUE)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(324, 324, 324)
                         .addComponent(lblTitle)))
@@ -155,7 +218,109 @@ public ManageEnterpriseJPanel(JPanel userProcessContainer, EcoSystem system) {
 
     private void cmbNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbNetworkActionPerformed
         // TODO add your handling code here:
+        populateTable();
     }//GEN-LAST:event_cmbNetworkActionPerformed
+
+    private void btnAddEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddEnterpriseActionPerformed
+        // TODO add your handling code here:
+         String entName = txtEntName.getText().trim();
+    String selectedNetworkName = (String) cmbNetwork.getSelectedItem();
+    String selectedTypeName = (String) cmbEntType.getSelectedItem();
+    
+    if (entName.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter an enterprise name.");
+        return;
+    }
+    
+    if (selectedNetworkName == null) {
+        JOptionPane.showMessageDialog(this, "Please select a network first.");
+        return;
+    }
+    
+    Network selectedNetwork = null;
+    for (Network n : system.getNetworkList()) {
+        if (n.getName().equals(selectedNetworkName)) {
+            selectedNetwork = n;
+            break;
+        }
+    }
+    
+    Enterprise.EnterpriseType selectedType = null;
+    for (Enterprise.EnterpriseType type : Enterprise.EnterpriseType.values()) {
+        if (type.getValue().equals(selectedTypeName)) {
+            selectedType = type;
+            break;
+        }
+    }
+    
+    if (selectedNetwork == null || selectedType == null) {
+        JOptionPane.showMessageDialog(this, "Invalid selection.");
+        return;
+    }
+    
+    selectedNetwork.getEnterpriseDirectory().createAndAddEnterprise(entName, selectedType);
+    
+    txtEntName.setText("");
+    populateTable();
+    JOptionPane.showMessageDialog(this, "Enterprise '" + entName + "' created successfully!");
+
+
+    }//GEN-LAST:event_btnAddEnterpriseActionPerformed
+
+    private void btnDeleteEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteEnterpriseActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblEnterprises.getSelectedRow();
+    String selectedNetworkName = (String) cmbNetwork.getSelectedItem();
+    
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(this, "Please select an enterprise to delete.");
+        return;
+    }
+    
+    Network selectedNetwork = null;
+    for (Network n : system.getNetworkList()) {
+        if (n.getName().equals(selectedNetworkName)) {
+            selectedNetwork = n;
+            break;
+        }
+    }
+    
+    if (selectedNetwork == null) {
+        JOptionPane.showMessageDialog(this, "No network selected.");
+        return;
+    }
+    
+    String entName = (String) tblEnterprises.getValueAt(selectedRow, 0);
+    
+    int confirm = JOptionPane.showConfirmDialog(this, 
+            "Are you sure you want to delete '" + entName + "'?",
+            "Confirm Delete", 
+            JOptionPane.YES_NO_OPTION);
+    
+    if (confirm == JOptionPane.YES_OPTION) {
+        Enterprise toRemove = null;
+        for (Enterprise e : selectedNetwork.getEnterpriseDirectory().getEnterpriseList()) {
+            if (e.getName().equals(entName)) {
+                toRemove = e;
+                break;
+            }
+        }
+        if (toRemove != null) {
+            selectedNetwork.getEnterpriseDirectory().getEnterpriseList().remove(toRemove);
+            populateTable();
+            JOptionPane.showMessageDialog(this, "Enterprise deleted successfully!");
+        }
+    }
+
+
+    }//GEN-LAST:event_btnDeleteEnterpriseActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+    userProcessContainer.remove(this);
+    CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+    layout.show(userProcessContainer, "workArea");
+    }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
