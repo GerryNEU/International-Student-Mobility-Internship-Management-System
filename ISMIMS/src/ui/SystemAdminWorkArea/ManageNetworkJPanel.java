@@ -41,7 +41,7 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
         btnAddNetwork = new javax.swing.JButton();
         btnDeleteNetwork = new javax.swing.JButton();
 
-        btnBack.setText("<< BACK");
+        btnBack.setText("<< Back");
 
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         lblTitle.setText("Manage Networks");
