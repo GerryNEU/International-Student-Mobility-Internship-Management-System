@@ -4,19 +4,25 @@
  */
 package ui.SystemAdminWorkArea;
 
+import business.EcoSystem;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gerrysu
  */
 public class ManageNetworkJPanel extends javax.swing.JPanel {
+    private JPanel userProcessContainer;
+    private EcoSystem system;
 
     /**
      * Creates new form ManageNetworkJPanel
      */
-    public ManageNetworkJPanel() {
-        initComponents();
-    }
-
+   public ManageNetworkJPanel(JPanel userProcessContainer, EcoSystem system) {
+    initComponents();
+    this.userProcessContainer = userProcessContainer;
+    this.system = system;
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
