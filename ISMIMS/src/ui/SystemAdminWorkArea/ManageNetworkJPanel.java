@@ -9,7 +9,6 @@ import business.network.Network;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
-
 /**
  *
  * @author gerrysu
