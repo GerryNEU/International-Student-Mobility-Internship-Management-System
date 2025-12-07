@@ -17,10 +17,13 @@ import javax.swing.JPanel;
  */
 public class ProcessVisaRequestJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private VisaSupportRequest request;
+    
     /**
      * Creates new form ProcessVisaRequestJPanel
      */
-    public ProcessVisaRequestJPanel() {
+    public ProcessVisaRequestJPanel(JPanel userProcessContainer, VisaSupportRequest request) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.request = request;
@@ -211,6 +214,22 @@ public class ProcessVisaRequestJPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnIssueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIssueActionPerformed
+        // TODO add your handling code here:
+        Random rand = new Random();
+        String visaNum = "VISA-" + (100000 + rand.nextInt(900000));
+        
+        request.setVisaIssued(true);
+        request.setVisaNumber(visaNum);
+        request.setStatus("Visa Issued");
+        request.setResult("Visa Approved: " + visaNum);
+        
+        txtVisaNumber.setText(visaNum);
+        btnIssue.setEnabled(false);
+        
+        JOptionPane.showMessageDialog(null, "Visa Generated Successfully!\nNumber: " + visaNum);
+    }//GEN-LAST:event_btnIssueActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
