@@ -144,11 +144,6 @@ public class CorporateRecruiterWorkAreaJPanel extends javax.swing.JPanel {
 
     private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
         // TODO add your handling code here:
-        populateTable();
-    }//GEN-LAST:event_btnProcessActionPerformed
-
-    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
-        // TODO add your handling code here:
         int selectedRow = tblWorkQueue.getSelectedRow();
         
         if (selectedRow < 0){
@@ -168,6 +163,12 @@ public class CorporateRecruiterWorkAreaJPanel extends javax.swing.JPanel {
         userProcessContainer.add("ProcessInternshipPlacementJPanel", processPanel);
         CardLayout layout = (CardLayout) userProcessContainer.getLayout();
         layout.next(userProcessContainer);
+        
+    }//GEN-LAST:event_btnProcessActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        populateTable();
     }//GEN-LAST:event_btnRefreshActionPerformed
 
 

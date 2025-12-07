@@ -18,6 +18,15 @@ public class InternshipPlacementRequest extends WorkRequest{
     private boolean offerAccepted;
     private String positionOffered;
     private ArrayList<String> resumeKeywords;
+    private String supervisorFeedback;
+
+    public String getSupervisorFeedback() {
+        return supervisorFeedback;
+    }
+
+    public void setSupervisorFeedback(String supervisorFeedback) {
+        this.supervisorFeedback = supervisorFeedback;
+    }
 
     public InternshipPlacementRequest(){
         super();
