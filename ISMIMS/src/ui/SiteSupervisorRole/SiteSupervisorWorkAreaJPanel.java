@@ -4,19 +4,67 @@
  */
 package ui.SiteSupervisorRole;
 
+import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.organization.Organization;
+import business.useraccount.UserAccount;
+import business.workqueue.InternshipPlacementRequest;
+import business.workqueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author gerrysu
  */
 public class SiteSupervisorWorkAreaJPanel extends javax.swing.JPanel {
-
+    
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private Organization organization;
+    private Enterprise enterprise;
+    private EcoSystem system;
+    
     /**
      * Creates new form SiteSupervisorWorkAreaJPanel
      */
-    public SiteSupervisorWorkAreaJPanel() {
+    public SiteSupervisorWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        this.system = system;
+        
+        populateTable();
+        
     }
-
+    
+    
+    
+    public void populateTable(){
+        DefaultTableModel model = (DefaultTableModel) tblInterns.getModel();
+        model.setRowCount(0);
+        
+        // go through
+        for(WorkRequest request : organization.getWorkQueue().getWorkRequestList()){
+            if(request instanceof InternshipPlacementRequest){
+                InternshipPlacementRequest ir = (InternshipPlacementRequest) request;
+                
+                if ("Offer Accepted".equals(ir.getStatus()) || "Internship Completed".equals(ir.getStatus())) {
+                    Object[] row = new Object[4];
+                    row[0] = ir; // Student Name
+                    row[1] = ir.getPositionOffered();
+                    row[2] = ir.getStatus();
+                    row[3] = ir.getSupervisorFeedback() == null ? "N/A" : "Provided";
+                    model.addRow(row);
+                }
+            }
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,19 +74,105 @@ public class SiteSupervisorWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblInterns = new javax.swing.JTable();
+        btnEvaluate = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
+        jLabel1 = new javax.swing.JLabel();
+
+        tblInterns.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Student", "Position", "Status", "Feedback"
+            }
+        ));
+        jScrollPane1.setViewportView(tblInterns);
+
+        btnEvaluate.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        btnEvaluate.setText("Evaluate Intern");
+        btnEvaluate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEvaluateActionPerformed(evt);
+            }
+        });
+
+        btnRefresh.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        btnRefresh.setText(" Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        jLabel1.setText("Site Supervisor Dahsboard");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(78, 78, 78)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 478, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(171, 171, 171)
+                        .addComponent(btnEvaluate)
+                        .addGap(57, 57, 57)
+                        .addComponent(btnRefresh))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(166, 166, 166)
+                        .addComponent(jLabel1)))
+                .addContainerGap(81, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(25, 25, 25)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(33, 33, 33)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnEvaluate)
+                    .addComponent(btnRefresh))
+                .addContainerGap(89, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        populateTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void btnEvaluateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEvaluateActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblInterns.getSelectedRow();
+        if(selectedRow < 0){
+            JOptionPane.showMessageDialog(null, "Please select an intern to evaluate.");
+            return;
+        }
+        
+        InternshipPlacementRequest request = (InternshipPlacementRequest)tblInterns.getValueAt(selectedRow, 0);
+        
+        ViewInternStatusJPanel viewPanel = new ViewInternStatusJPanel(userProcessContainer, request);
+        userProcessContainer.add("ViewInternStatusJPanel", viewPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnEvaluateActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEvaluate;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblInterns;
     // End of variables declaration//GEN-END:variables
 }

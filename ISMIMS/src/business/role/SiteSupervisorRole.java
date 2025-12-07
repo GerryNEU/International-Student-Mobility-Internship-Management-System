@@ -20,6 +20,7 @@ public class SiteSupervisorRole extends Role {
     
     @Override
     public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
-        return new SiteSupervisorWorkAreaJPanel(); // You will need to update the constructor of JPanel to accept these parameters later
-    }        
+        
+        return new SiteSupervisorWorkAreaJPanel(userProcessContainer, account, organization, enterprise, business);
+    }     
 }

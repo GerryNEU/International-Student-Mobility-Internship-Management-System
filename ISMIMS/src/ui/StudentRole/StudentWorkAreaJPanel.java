@@ -77,7 +77,7 @@ public class StudentWorkAreaJPanel extends javax.swing.JPanel {
         lblValue.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         lblValue.setText("<value>");
 
-        btnFindInternship.setText("Find Intership");
+        btnFindInternship.setText("Find Internship");
         btnFindInternship.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFindInternshipActionPerformed(evt);
