@@ -4,6 +4,7 @@
  */
 package ui.SystemAdminWorkArea;
 
+import business.ConfigureASystem;
 import business.EcoSystem;
 import business.enterprise.Enterprise;
 import business.network.Network;
@@ -11,6 +12,7 @@ import business.organization.Organization;
 import business.useraccount.UserAccount;
 import java.awt.CardLayout;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
@@ -27,18 +29,51 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
     /**
      * Creates new form SystemAdminWorkAreaJPanel
      */
-    public SystemAdminWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem system) {  
-        initComponents();
-        
-        this.userProcessContainer = userProcessContainer;       
-        this.system = system;
-
-        populateTree();
-    }
+  public SystemAdminWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, 
+        Organization organization, Enterprise enterprise, EcoSystem system) {
+    initComponents();
+    this.userProcessContainer = userProcessContainer;
+    this.system = system;
     
+    populateTree();
+    updateStatistics();
+}
     public void populateTree() {
         // Logic to populate JTree with Networks and Enterprises
+        DefaultMutableTreeNode root = new DefaultMutableTreeNode("EcoSystem");
+    
+    for (Network network : system.getNetworkList()) {
+        DefaultMutableTreeNode networkNode = new DefaultMutableTreeNode(network.getName());
+        
+        for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+            DefaultMutableTreeNode entNode = new DefaultMutableTreeNode(enterprise.getName());
+            networkNode.add(entNode);
+        }
+        root.add(networkNode);
     }
+    
+    treeSystem.setModel(new DefaultTreeModel(root));
+    
+  
+    for (int i = 0; i < treeSystem.getRowCount(); i++) {
+        treeSystem.expandRow(i);
+    }
+}
+    //update the statistics
+    private void updateStatistics() {
+    int students = ConfigureASystem.getTotalStudentCount(system);
+    int pending = ConfigureASystem.getTotalPendingRequests(system);
+    int enterprises = 0;
+    
+    for (Network n : system.getNetworkList()) {
+        enterprises += n.getEnterpriseDirectory().getEnterpriseList().size();
+    }
+    
+    lblStudentCount.setText("Total Students: " + students);
+    lblEnterpriseCount.setText("Total Enterprises: " + enterprises);
+    lblPendingCount.setText("Pending Requests: " + pending);
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -49,30 +84,200 @@ public class SystemAdminWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        treeSystem = new javax.swing.JTree();
+        btnManageNetwork = new javax.swing.JButton();
+        btnManageEnterprise = new javax.swing.JButton();
+        btnManageAdmin = new javax.swing.JButton();
+        btnPopulateData = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        lblStudentCount = new javax.swing.JLabel();
+        lblEnterpriseCount = new javax.swing.JLabel();
+        lblPendingCount = new javax.swing.JLabel();
+        lblStats = new javax.swing.JLabel();
 
-        jLabel1.setText("System Admin Work Area");
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblTitle.setText("System Admin Work Area");
+
+        jScrollPane1.setViewportView(treeSystem);
+
+        btnManageNetwork.setText("ManageNetWork");
+        btnManageNetwork.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageNetworkActionPerformed(evt);
+            }
+        });
+
+        btnManageEnterprise.setText("ManageEnterprise");
+        btnManageEnterprise.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageEnterpriseActionPerformed(evt);
+            }
+        });
+
+        btnManageAdmin.setText("ManageAdmin");
+        btnManageAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageAdminActionPerformed(evt);
+            }
+        });
+
+        btnPopulateData.setText("PopulateData");
+        btnPopulateData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPopulateDataActionPerformed(evt);
+            }
+        });
+
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        lblStudentCount.setText("jLabel3");
+
+        lblEnterpriseCount.setText("jLabel4");
+
+        lblPendingCount.setText("jLabel5");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblPendingCount)
+                    .addComponent(lblEnterpriseCount)
+                    .addComponent(lblStudentCount))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(lblStudentCount)
+                .addGap(18, 18, 18)
+                .addComponent(lblEnterpriseCount)
+                .addGap(18, 18, 18)
+                .addComponent(lblPendingCount)
+                .addContainerGap(27, Short.MAX_VALUE))
+        );
+
+        lblStats.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        lblStats.setText("Stastics:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblTitle)
+                .addGap(292, 292, 292))
             .addGroup(layout.createSequentialGroup()
-                .addGap(116, 116, 116)
-                .addComponent(jLabel1)
-                .addContainerGap(135, Short.MAX_VALUE))
+                .addGap(45, 45, 45)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 370, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 113, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(btnRefresh, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnPopulateData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnManageAdmin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnManageEnterprise, javax.swing.GroupLayout.DEFAULT_SIZE, 185, Short.MAX_VALUE)
+                            .addComponent(btnManageNetwork, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addGap(87, 87, 87))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(72, 72, 72)
+                .addComponent(lblStats)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(75, 75, 75)
-                .addComponent(jLabel1)
-                .addContainerGap(208, Short.MAX_VALUE))
+                .addGap(42, 42, 42)
+                .addComponent(lblTitle)
+                .addGap(43, 43, 43)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnManageNetwork)
+                        .addGap(77, 77, 77)
+                        .addComponent(btnManageEnterprise)
+                        .addGap(74, 74, 74)
+                        .addComponent(btnManageAdmin)
+                        .addGap(81, 81, 81)
+                        .addComponent(btnPopulateData)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnRefresh))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 436, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(36, 36, 36)
+                .addComponent(lblStats)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(46, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnPopulateDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPopulateDataActionPerformed
+        // TODO add your handling code here:
+        ConfigureASystem.populateFakeData(system, 20, 5);
+        populateTree();
+        updateStatistics();
+        JOptionPane.showMessageDialog(this, "Generated 20 students and 5 companies!");
+    }//GEN-LAST:event_btnPopulateDataActionPerformed
+
+    private void btnManageNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageNetworkActionPerformed
+        // TODO add your handling code here:
+        ManageNetworkJPanel panel = new ManageNetworkJPanel(userProcessContainer, system);
+        userProcessContainer.add("ManageNetworkJPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnManageNetworkActionPerformed
+
+    private void btnManageEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageEnterpriseActionPerformed
+         // TODO add your handling code here:
+          ManageEnterpriseJPanel panel = new ManageEnterpriseJPanel(userProcessContainer, system);
+          userProcessContainer.add("ManageEnterpriseJPanel", panel);
+          CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+          layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnManageEnterpriseActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+         populateTree();
+         updateStatistics();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void btnManageAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageAdminActionPerformed
+        // TODO add your handling code here:
+        ManageEnterpriseAdminJPanel panel = new ManageEnterpriseAdminJPanel(userProcessContainer, system);
+        userProcessContainer.add("ManageEnterpriseAdminJPanel", panel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnManageAdminActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnManageAdmin;
+    private javax.swing.JButton btnManageEnterprise;
+    private javax.swing.JButton btnManageNetwork;
+    private javax.swing.JButton btnPopulateData;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblEnterpriseCount;
+    private javax.swing.JLabel lblPendingCount;
+    private javax.swing.JLabel lblStats;
+    private javax.swing.JLabel lblStudentCount;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTree treeSystem;
     // End of variables declaration//GEN-END:variables
 }

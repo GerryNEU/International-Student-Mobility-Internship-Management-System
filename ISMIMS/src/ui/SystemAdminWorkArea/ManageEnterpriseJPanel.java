@@ -4,18 +4,76 @@
  */
 package ui.SystemAdminWorkArea;
 
+import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.network.Network;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author gerrysu
  */
 public class ManageEnterpriseJPanel extends javax.swing.JPanel {
+    private JPanel userProcessContainer;
+    private EcoSystem system;
 
     /**
      * Creates new form ManageEnterpriseJPanel
      */
-    public ManageEnterpriseJPanel() {
-        initComponents();
+    
+
+public ManageEnterpriseJPanel(JPanel userProcessContainer, EcoSystem system) {
+    initComponents();
+    this.userProcessContainer = userProcessContainer;
+    this.system = system;
+    
+    populateNetworkComboBox();
+    populateEnterpriseTypeComboBox();
+    populateTable();
+}
+
+private void populateNetworkComboBox() {
+    cmbNetwork.removeAllItems();
+    for (Network network : system.getNetworkList()) {
+        cmbNetwork.addItem(network.getName());
     }
+}
+
+private void populateEnterpriseTypeComboBox() {
+    cmbEntType.removeAllItems();
+    for (Enterprise.EnterpriseType type : Enterprise.EnterpriseType.values()) {
+        cmbEntType.addItem(type.getValue());
+    }
+}
+
+private void populateTable() {
+     DefaultTableModel model = (DefaultTableModel) tblEnterprises.getModel();
+    model.setRowCount(0);
+    
+    String selectedNetworkName = (String) cmbNetwork.getSelectedItem();
+    if (selectedNetworkName == null) return;
+    
+    Network selectedNetwork = null;
+    for (Network n : system.getNetworkList()) {
+        if (n.getName().equals(selectedNetworkName)) {
+            selectedNetwork = n;
+            break;
+        }
+    }
+    if (selectedNetwork == null) return;
+    
+    for (Enterprise enterprise : selectedNetwork.getEnterpriseDirectory().getEnterpriseList()) {
+        Object[] row = new Object[3];
+        row[0] = enterprise.getName();
+        row[1] = enterprise.getClass().getSimpleName().replace("Enterprise", "");
+        row[2] = enterprise.getOrganizationDirectory().getOrganizationList().size();
+        model.addRow(row);
+    }
+}
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,19 +84,257 @@ public class ManageEnterpriseJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnBack = new javax.swing.JButton();
+        lblTitle = new javax.swing.JLabel();
+        lblSelectNetwork = new javax.swing.JLabel();
+        cmbNetwork = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblEnterprises = new javax.swing.JTable();
+        lblEntName = new javax.swing.JLabel();
+        lblEntType = new javax.swing.JLabel();
+        txtEntName = new javax.swing.JTextField();
+        cmbEntType = new javax.swing.JComboBox<>();
+        btnAddEnterprise = new javax.swing.JButton();
+        btnDeleteEnterprise = new javax.swing.JButton();
+
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblTitle.setText("Manage Enterprises");
+
+        lblSelectNetwork.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        lblSelectNetwork.setText("Select Network:");
+
+        cmbNetwork.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbNetwork.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbNetworkActionPerformed(evt);
+            }
+        });
+
+        tblEnterprises.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Enterprise Name", "Type", "Org Count"
+            }
+        ));
+        jScrollPane1.setViewportView(tblEnterprises);
+
+        lblEntName.setText("Name :");
+
+        lblEntType.setText("Type :");
+
+        cmbEntType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        btnAddEnterprise.setText("AddEnterprise");
+        btnAddEnterprise.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddEnterpriseActionPerformed(evt);
+            }
+        });
+
+        btnDeleteEnterprise.setText("DeleteEnterprise");
+        btnDeleteEnterprise.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteEnterpriseActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(105, 105, 105)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblSelectNetwork)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cmbNetwork, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnBack)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 103, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(235, 235, 235)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAddEnterprise)
+                                .addGap(161, 161, 161)
+                                .addComponent(btnDeleteEnterprise))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblEntName)
+                                    .addComponent(lblEntType))
+                                .addGap(110, 110, 110)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtEntName)
+                                    .addComponent(cmbEntType, 0, 192, Short.MAX_VALUE)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(324, 324, 324)
+                        .addComponent(lblTitle)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(btnBack)
+                .addGap(13, 13, 13)
+                .addComponent(lblTitle)
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblSelectNetwork)
+                    .addComponent(cmbNetwork, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(43, 43, 43)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEntName)
+                    .addComponent(txtEntName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(42, 42, 42)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEntType)
+                    .addComponent(cmbEntType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnAddEnterprise)
+                    .addComponent(btnDeleteEnterprise))
+                .addGap(51, 51, 51))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cmbNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbNetworkActionPerformed
+        // TODO add your handling code here:
+        populateTable();
+    }//GEN-LAST:event_cmbNetworkActionPerformed
+
+    private void btnAddEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddEnterpriseActionPerformed
+        // TODO add your handling code here:
+         String entName = txtEntName.getText().trim();
+    String selectedNetworkName = (String) cmbNetwork.getSelectedItem();
+    String selectedTypeName = (String) cmbEntType.getSelectedItem();
+    
+    if (entName.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter an enterprise name.");
+        return;
+    }
+    
+    if (selectedNetworkName == null) {
+        JOptionPane.showMessageDialog(this, "Please select a network first.");
+        return;
+    }
+    
+    Network selectedNetwork = null;
+    for (Network n : system.getNetworkList()) {
+        if (n.getName().equals(selectedNetworkName)) {
+            selectedNetwork = n;
+            break;
+        }
+    }
+    
+    Enterprise.EnterpriseType selectedType = null;
+    for (Enterprise.EnterpriseType type : Enterprise.EnterpriseType.values()) {
+        if (type.getValue().equals(selectedTypeName)) {
+            selectedType = type;
+            break;
+        }
+    }
+    
+    if (selectedNetwork == null || selectedType == null) {
+        JOptionPane.showMessageDialog(this, "Invalid selection.");
+        return;
+    }
+    
+    selectedNetwork.getEnterpriseDirectory().createAndAddEnterprise(entName, selectedType);
+    
+    txtEntName.setText("");
+    populateTable();
+    JOptionPane.showMessageDialog(this, "Enterprise '" + entName + "' created successfully!");
+
+
+    }//GEN-LAST:event_btnAddEnterpriseActionPerformed
+
+    private void btnDeleteEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteEnterpriseActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblEnterprises.getSelectedRow();
+    String selectedNetworkName = (String) cmbNetwork.getSelectedItem();
+    
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(this, "Please select an enterprise to delete.");
+        return;
+    }
+    
+    Network selectedNetwork = null;
+    for (Network n : system.getNetworkList()) {
+        if (n.getName().equals(selectedNetworkName)) {
+            selectedNetwork = n;
+            break;
+        }
+    }
+    
+    if (selectedNetwork == null) {
+        JOptionPane.showMessageDialog(this, "No network selected.");
+        return;
+    }
+    
+    String entName = (String) tblEnterprises.getValueAt(selectedRow, 0);
+    
+    int confirm = JOptionPane.showConfirmDialog(this, 
+            "Are you sure you want to delete '" + entName + "'?",
+            "Confirm Delete", 
+            JOptionPane.YES_NO_OPTION);
+    
+    if (confirm == JOptionPane.YES_OPTION) {
+        Enterprise toRemove = null;
+        for (Enterprise e : selectedNetwork.getEnterpriseDirectory().getEnterpriseList()) {
+            if (e.getName().equals(entName)) {
+                toRemove = e;
+                break;
+            }
+        }
+        if (toRemove != null) {
+            selectedNetwork.getEnterpriseDirectory().getEnterpriseList().remove(toRemove);
+            populateTable();
+            JOptionPane.showMessageDialog(this, "Enterprise deleted successfully!");
+        }
+    }
+
+
+    }//GEN-LAST:event_btnDeleteEnterpriseActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+    userProcessContainer.remove(this);
+    CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+    layout.show(userProcessContainer, "workArea");
+    }//GEN-LAST:event_btnBackActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddEnterprise;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnDeleteEnterprise;
+    private javax.swing.JComboBox<String> cmbEntType;
+    private javax.swing.JComboBox<String> cmbNetwork;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblEntName;
+    private javax.swing.JLabel lblEntType;
+    private javax.swing.JLabel lblSelectNetwork;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblEnterprises;
+    private javax.swing.JTextField txtEntName;
     // End of variables declaration//GEN-END:variables
 }
