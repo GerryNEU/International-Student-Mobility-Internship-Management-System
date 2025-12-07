@@ -4,6 +4,7 @@
  */
 package ui.VisaSpecialistRole;
 
+import business.workqueue.StudyAbroadApplication;
 import business.workqueue.VisaSupportRequest;
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -31,29 +32,49 @@ public class ProcessVisaRequestJPanel extends javax.swing.JPanel {
     }
     
     private void populateData(){
-        if(request.getSender() != null){
-            txtStudent.setText(request.getSender().getEmployee().getName());
-        }
-        txtPassport.setText(request.getPassportNumber());
-        txtCountry.setText(request.getIssuingCountry());
-        
-        // Read-only fields
-        txtStudent.setEnabled(false);
-        txtPassport.setEnabled(false);
-        txtCountry.setEnabled(false);
-        
-        // Status checks
-        chkLegal.setSelected(request.isLegalCheckPassed());
-        chkFinancial.setSelected(request.isFinancialProofVerified());
-        chkLegal.setEnabled(false); // Specialist cannot change these
-        chkFinancial.setEnabled(false);
-        
-        // If already issued, show number
-        if(request.isVisaIssued()){
-            txtVisaNumber.setText(request.getVisaNumber());
-            btnIssue.setEnabled(false);
-        }
+    if(request.getSender() != null){
+        txtStudent.setText(request.getSender().getEmployee().getName());
     }
+    txtPassport.setText(request.getPassportNumber());
+    txtCountry.setText(request.getIssuingCountry());
+
+    StudyAbroadApplication app = request.getStudyAbroadApplication();
+    if (app != null) {
+        if (app.isAidApproved()) {
+            double aidAmount = app.getGrantAmount();
+            txtAid.setText("$" + String.format("%.2f", aidAmount));
+            chkFinancial.setSelected(true); 
+        } else if (app.isAidSaved()) {
+
+            txtAid.setText("Pending Approval");
+            chkFinancial.setSelected(false);
+        } else {
+            txtAid.setText("Not Available");
+            chkFinancial.setSelected(false);
+        }
+    } else {
+        txtAid.setText("N/A");
+        chkFinancial.setSelected(false);
+    }
+    
+    // Read-only fields
+    txtStudent.setEnabled(false);
+    txtPassport.setEnabled(false);
+    txtCountry.setEnabled(false);
+    txtAid.setEnabled(false);  
+    
+    // Status checks
+    chkLegal.setSelected(request.isLegalCheckPassed());
+
+    chkLegal.setEnabled(false); // Specialist cannot change these
+    chkFinancial.setEnabled(false);
+    
+    // If already issued, show number
+    if(request.isVisaIssued()){
+        txtVisaNumber.setText(request.getVisaNumber());
+        btnIssue.setEnabled(false);
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -78,6 +99,8 @@ public class ProcessVisaRequestJPanel extends javax.swing.JPanel {
         txtPassport = new javax.swing.JTextField();
         txtCountry = new javax.swing.JTextField();
         txtVisaNumber = new javax.swing.JTextField();
+        lblAid = new javax.swing.JLabel();
+        txtAid = new javax.swing.JTextField();
 
         btnBack.setText("<< Back");
 
@@ -106,6 +129,10 @@ public class ProcessVisaRequestJPanel extends javax.swing.JPanel {
         lblCheck.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         lblCheck.setText("Verification Status (ReadOnly):");
 
+        lblAid.setText("Finance Aid");
+
+        txtAid.setEditable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,13 +159,15 @@ public class ProcessVisaRequestJPanel extends javax.swing.JPanel {
                                     .addComponent(lblPassport)
                                     .addComponent(lblStudent)
                                     .addComponent(lblCountry)
-                                    .addComponent(lblVisaNumber))
+                                    .addComponent(lblVisaNumber)
+                                    .addComponent(lblAid))
                                 .addGap(98, 98, 98)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(txtVisaNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
                                     .addComponent(txtCountry)
                                     .addComponent(txtPassport)
-                                    .addComponent(txtStudent)))))
+                                    .addComponent(txtStudent)
+                                    .addComponent(txtAid)))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(368, 368, 368)
                         .addComponent(lblTitle))
@@ -168,7 +197,11 @@ public class ProcessVisaRequestJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblVisaNumber)
                     .addComponent(txtVisaNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblAid)
+                    .addComponent(txtAid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
                 .addComponent(lblCheck)
                 .addGap(18, 18, 18)
                 .addComponent(chkLegal)
@@ -204,12 +237,14 @@ public class ProcessVisaRequestJPanel extends javax.swing.JPanel {
     private javax.swing.JButton btnIssue;
     private javax.swing.JCheckBox chkFinancial;
     private javax.swing.JCheckBox chkLegal;
+    private javax.swing.JLabel lblAid;
     private javax.swing.JLabel lblCheck;
     private javax.swing.JLabel lblCountry;
     private javax.swing.JLabel lblPassport;
     private javax.swing.JLabel lblStudent;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblVisaNumber;
+    private javax.swing.JTextField txtAid;
     private javax.swing.JTextField txtCountry;
     private javax.swing.JTextField txtPassport;
     private javax.swing.JTextField txtStudent;

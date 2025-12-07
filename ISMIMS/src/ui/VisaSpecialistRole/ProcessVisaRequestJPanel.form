@@ -44,6 +44,7 @@
                                   <Component id="lblStudent" min="-2" max="-2" attributes="0"/>
                                   <Component id="lblCountry" alignment="1" min="-2" max="-2" attributes="0"/>
                                   <Component id="lblVisaNumber" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblAid" alignment="1" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="98" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -51,6 +52,7 @@
                                   <Component id="txtCountry" alignment="0" max="32767" attributes="0"/>
                                   <Component id="txtPassport" alignment="0" max="32767" attributes="0"/>
                                   <Component id="txtStudent" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txtAid" alignment="0" max="32767" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -93,7 +95,12 @@
                   <Component id="lblVisaNumber" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtVisaNumber" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="111" max="32767" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblAid" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtAid" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="70" max="32767" attributes="0"/>
               <Component id="lblCheck" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="chkLegal" min="-2" max="-2" attributes="0"/>
@@ -175,6 +182,16 @@
     <Component class="javax.swing.JTextField" name="txtCountry">
     </Component>
     <Component class="javax.swing.JTextField" name="txtVisaNumber">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblAid">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Finance Aid"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtAid">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+      </Properties>
     </Component>
   </SubComponents>
 </Form>

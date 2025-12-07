@@ -12,6 +12,8 @@ import business.organization.LegalComplianceOrganization;
 import business.organization.Organization;
 import business.useraccount.UserAccount;
 import business.workqueue.VisaSupportRequest;
+import business.workqueue.WorkRequest;
+import business.workqueue.StudyAbroadApplication;
 import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.JOptionPane;
@@ -151,46 +153,65 @@ public class RequestVisaJPanel extends javax.swing.JPanel {
 
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         // TODO add your handling code here:
-        String passport = txtPassport.getText();
-        String country = txtCountry.getText();
-        
-        if(passport.isEmpty() || country.isEmpty()){
-            JOptionPane.showMessageDialog(null, "Please fill all fields.");
-            return;
+        String passport = txtPassport.getText().trim();
+    String country = txtCountry.getText().trim();
+    
+    if(passport.isEmpty() || country.isEmpty()){
+        JOptionPane.showMessageDialog(null, "Please fill all fields.");
+        return;
+    }
+    
+    // Find accepted application
+    business.workqueue.StudyAbroadApplication acceptedApp = null;
+    for (business.workqueue.WorkRequest wr : userAccount.getWorkQueue().getWorkRequestList()) {
+        if (wr instanceof business.workqueue.StudyAbroadApplication) {
+            business.workqueue.StudyAbroadApplication app = (business.workqueue.StudyAbroadApplication) wr;
+            if ("Offer Accepted".equals(app.getStatus())) {
+                acceptedApp = app;
+                break;
+            }
         }
-        
-        // 1. Create Request
-        VisaSupportRequest request = new VisaSupportRequest();
-        request.setPassportNumber(passport);
-        request.setIssuingCountry(country);
-        request.setSender(userAccount);
-        request.setStatus("Pending Legal Check");
-        request.setMessage("Visa App: " + passport);
-        
-        // 2. Find the Legal Compliance Organization in the Government Enterprise
-        Organization legalOrg = null;
-        for (Network n : system.getNetworkList()){
-            for (Enterprise e : n.getEnterpriseDirectory().getEnterpriseList()){
-                if (e instanceof VisaGovernmentEnterprise){
-                    for (Organization o : e.getOrganizationDirectory().getOrganizationList()){
-                        if (o instanceof LegalComplianceOrganization){
-                            legalOrg = o;
-                            break;
-                        }
+    }
+    
+    if (acceptedApp == null) {
+        JOptionPane.showMessageDialog(null, "You must accept an offer first.");
+        return;
+    }
+    
+    VisaSupportRequest request = new VisaSupportRequest();
+    request.setPassportNumber(passport);
+    request.setIssuingCountry(country);
+    request.setSender(userAccount);
+    request.setStatus("Pending Legal Check");
+    request.setMessage("Visa App: " + passport);
+    request.setStudyAbroadApplication(acceptedApp);
+    
+    if (acceptedApp.isAidApproved()) {
+        request.setFinancialProofVerified(true);
+    }
+    
+    Organization legalOrg = null;
+    for (Network n : system.getNetworkList()){
+        for (Enterprise e : n.getEnterpriseDirectory().getEnterpriseList()){
+            if (e instanceof VisaGovernmentEnterprise){
+                for (Organization o : e.getOrganizationDirectory().getOrganizationList()){
+                    if (o instanceof LegalComplianceOrganization){
+                        legalOrg = o;
+                        break;
                     }
                 }
             }
         }
-        
-        // 3. Send
-        if(legalOrg != null){
-            legalOrg.getWorkQueue().getWorkRequestList().add(request);
-            userAccount.getWorkQueue().getWorkRequestList().add(request);
-            JOptionPane.showMessageDialog(null, "Visa Application Submitted to Government for Legal Review.");
-            goBack();
-        } else {
-            JOptionPane.showMessageDialog(null, "Error: Government Legal Office not found.");
-        }
+    }
+    
+    if(legalOrg != null){
+        legalOrg.getWorkQueue().getWorkRequestList().add(request);
+        userAccount.getWorkQueue().getWorkRequestList().add(request);
+        JOptionPane.showMessageDialog(null, "Visa Application Submitted.");
+        goBack();
+    } else {
+        JOptionPane.showMessageDialog(null, "Error: Legal Office not found.");
+    }
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void goBack(){
