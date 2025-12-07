@@ -213,7 +213,7 @@ public class ProcessInternshipPlacementJPanel extends javax.swing.JPanel {
         Component[] componentArray = userProcessContainer.getComponents();
         Component component = componentArray[componentArray.length - 1];
         CorporateRecruiterWorkAreaJPanel dwjp = (CorporateRecruiterWorkAreaJPanel) component;
-        dwjp.populateTable(); // 刷新上一个页面的表格
+        dwjp.populateTable(); 
         CardLayout layout = (CardLayout) userProcessContainer.getLayout();
         layout.previous(userProcessContainer);
     }

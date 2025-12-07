@@ -108,7 +108,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnFindInternship">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Find Intership"/>
+        <Property name="text" type="java.lang.String" value="Find Internship"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFindInternshipActionPerformed"/>
