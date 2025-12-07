@@ -4,17 +4,43 @@
  */
 package ui.SystemAuditorWorkArea;
 
+import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.organization.Organization;
+import business.useraccount.UserAccount;
+import javax.swing.JPanel;
 /**
  *
  * @author gerrysu
  */
 public class SystemAuditorWorkAreaJPanel extends javax.swing.JPanel {
 
+    private JPanel userProcessContainer;
+    private UserAccount account;
+    private Organization organization;
+    private Enterprise enterprise;
+    private EcoSystem business;
     /**
      * Creates new form SystemAuditorWorkAreaJPanel
      */
     public SystemAuditorWorkAreaJPanel() {
         initComponents();
+    }
+    
+    public SystemAuditorWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, 
+                                       Organization organization, Enterprise enterprise, 
+                                       EcoSystem business) {
+        initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.account = account;
+        this.organization = organization;
+        this.enterprise = enterprise;
+        this.business = business;
+        
+        // Update welcome label with user name
+        if (account != null && account.getEmployee() != null) {
+            lblWelcome.setText("Welcome, " + account.getEmployee().getName() + "!");
+        }
     }
 
     /**
@@ -26,19 +52,57 @@ public class SystemAuditorWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitle = new javax.swing.JLabel();
+        lblWelcome = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtAuditInfo = new javax.swing.JTextArea();
+
+        lblTitle.setFont(new java.awt.Font("Microsoft YaHei UI", 1, 24)); // NOI18N
+        lblTitle.setText("System Auditor Work Area");
+
+        lblWelcome.setText("Welcome, System Auditor!");
+
+        txtAuditInfo.setEditable(false);
+        txtAuditInfo.setColumns(20);
+        txtAuditInfo.setRows(5);
+        txtAuditInfo.setText("System Audit Dashboard\n\n   ✓ System Status: Operational\n   ✓ Active Users: All accounts configured\n   ✓ Security Level: Standard\n\n   This is the System Auditor work area. Here you can:\n   - Monitor system activities\n   - Review audit logs\n   - Check user access patterns\n   - Generate compliance reports\n\n   System auditing features are available for implementation");
+        jScrollPane1.setViewportView(txtAuditInfo);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(243, 243, 243)
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(322, 322, 322)
+                        .addComponent(lblWelcome))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(55, 55, 55)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 717, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(67, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(54, 54, 54)
+                .addComponent(lblTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(lblWelcome)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 378, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(144, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblWelcome;
+    private javax.swing.JTextArea txtAuditInfo;
     // End of variables declaration//GEN-END:variables
 }

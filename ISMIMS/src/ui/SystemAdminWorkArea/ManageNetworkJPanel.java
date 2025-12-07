@@ -4,19 +4,42 @@
  */
 package ui.SystemAdminWorkArea;
 
+import business.EcoSystem;
+import business.network.Network;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author gerrysu
  */
 public class ManageNetworkJPanel extends javax.swing.JPanel {
+    private JPanel userProcessContainer;
+    private EcoSystem system;
 
     /**
      * Creates new form ManageNetworkJPanel
      */
-    public ManageNetworkJPanel() {
-        initComponents();
+   public ManageNetworkJPanel(JPanel userProcessContainer, EcoSystem system) {
+    initComponents();
+    this.userProcessContainer = userProcessContainer;
+    this.system = system;
+    
+    populateTable();
+}
+   private void populateTable() {
+    DefaultTableModel model = (DefaultTableModel) tblNetworks.getModel();
+    model.setRowCount(0);
+    
+    for (Network network : system.getNetworkList()) {
+        Object[] row = new Object[2];
+        row[0] = network.getName();
+        row[1] = network.getEnterpriseDirectory().getEnterpriseList().size();
+        model.addRow(row);
     }
-
+}
+   
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,19 +49,173 @@ public class ManageNetworkJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnBack = new javax.swing.JButton();
+        lblTitle = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblNetworks = new javax.swing.JTable();
+        lblNetworkName = new javax.swing.JLabel();
+        txtNetworkName = new javax.swing.JTextField();
+        btnAddNetwork = new javax.swing.JButton();
+        btnDeleteNetwork = new javax.swing.JButton();
+
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblTitle.setText("Manage Networks");
+
+        tblNetworks.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null},
+                {null, null},
+                {null, null},
+                {null, null}
+            },
+            new String [] {
+                "Network Name", "Enterprise Count "
+            }
+        ));
+        jScrollPane1.setViewportView(tblNetworks);
+
+        lblNetworkName.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        lblNetworkName.setText("Network Name :");
+
+        btnAddNetwork.setText("AddNetwork");
+        btnAddNetwork.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddNetworkActionPerformed(evt);
+            }
+        });
+
+        btnDeleteNetwork.setText("DeleteNetwork");
+        btnDeleteNetwork.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteNetworkActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(191, 191, 191)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblNetworkName)
+                        .addGap(55, 55, 55)
+                        .addComponent(txtNetworkName, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnAddNetwork)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnDeleteNetwork)
+                        .addGap(182, 182, 182))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(82, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBack)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(lblTitle)
+                            .addGap(325, 325, 325))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 657, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(68, 68, 68)))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(44, 44, 44)
+                .addComponent(btnBack)
+                .addGap(36, 36, 36)
+                .addComponent(lblTitle)
+                .addGap(26, 26, 26)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(53, 53, 53)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtNetworkName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblNetworkName))
+                .addGap(46, 46, 46)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnDeleteNetwork)
+                    .addComponent(btnAddNetwork))
+                .addContainerGap(74, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnAddNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddNetworkActionPerformed
+        // TODO add your handling code here:
+        String networkName = txtNetworkName.getText().trim();
+    
+    if (networkName.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Please enter a network name.");
+        return;
+    }
+    
+    Network network = system.createAndAddNetwork();
+    network.setName(networkName);
+    
+    txtNetworkName.setText("");
+    populateTable();
+    JOptionPane.showMessageDialog(this, "Network '" + networkName + "' created successfully!");
+
+    }//GEN-LAST:event_btnAddNetworkActionPerformed
+
+    private void btnDeleteNetworkActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteNetworkActionPerformed
+        // TODO add your handling code here:
+    int selectedRow = tblNetworks.getSelectedRow();
+    
+    if (selectedRow < 0) {
+        JOptionPane.showMessageDialog(this, "Please select a network to delete.");
+        return;
+    }
+    
+    String networkName = (String) tblNetworks.getValueAt(selectedRow, 0);
+    
+    int confirm = JOptionPane.showConfirmDialog(this, 
+            "Are you sure you want to delete '" + networkName + "'?",
+            "Confirm Delete", 
+            JOptionPane.YES_NO_OPTION);
+    
+    if (confirm == JOptionPane.YES_OPTION) {
+        // Find and remove the network
+        Network toRemove = null;
+        for (Network n : system.getNetworkList()) {
+            if (n.getName().equals(networkName)) {
+                toRemove = n;
+                break;
+            }
+        }
+        if (toRemove != null) {
+            system.getNetworkList().remove(toRemove);
+            populateTable();
+            JOptionPane.showMessageDialog(this, "Network deleted successfully!");
+        }
+    }
+
+    }//GEN-LAST:event_btnDeleteNetworkActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        userProcessContainer.remove(this);
+    CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+    layout.show(userProcessContainer, "workArea");
+    }//GEN-LAST:event_btnBackActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddNetwork;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnDeleteNetwork;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblNetworkName;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblNetworks;
+    private javax.swing.JTextField txtNetworkName;
     // End of variables declaration//GEN-END:variables
 }

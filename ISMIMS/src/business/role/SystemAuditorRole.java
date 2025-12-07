@@ -18,7 +18,17 @@ import ui.SystemAuditorWorkArea.SystemAuditorWorkAreaJPanel;
 public class SystemAuditorRole extends Role{
 
     @Override
-    public JPanel createWorkArea(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
-        return new SystemAuditorWorkAreaJPanel();
-    }      
+    public JPanel createWorkArea(JPanel userProcessContainer, 
+                                UserAccount account, 
+                                Organization organization, 
+                                Enterprise enterprise, 
+                                EcoSystem business) {
+        return new SystemAuditorWorkAreaJPanel(
+            userProcessContainer, 
+            account, 
+            organization, 
+            enterprise, 
+            business
+        );
+    }         
 }

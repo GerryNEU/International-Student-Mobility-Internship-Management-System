@@ -4,18 +4,88 @@
  */
 package ui.SystemAdminWorkArea;
 
+import business.EcoSystem;
+import business.employee.Employee;
+import business.enterprise.Enterprise;
+import business.network.Network;
+import business.organization.Organization;
+import business.role.Role;
+import business.role.SystemAdminRole;
+import business.useraccount.UserAccount;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
+import business.enterprise.Enterprise;
+import business.network.Network;
+import business.organization.Organization;
+import business.useraccount.UserAccount;
+import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
+
 /**
  *
  * @author gerrysu
  */
 public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
+    private JPanel userProcessContainer;
+    private EcoSystem system;
+
 
     /**
      * Creates new form ManageEnterpriseAdminJPanel
      */
-    public ManageEnterpriseAdminJPanel() {
-        initComponents();
+    public ManageEnterpriseAdminJPanel(JPanel userProcessContainer, EcoSystem system) {
+    initComponents();
+    this.userProcessContainer = userProcessContainer;
+    this.system = system;
+    
+     populateEnterpriseComboBox();
+        populateTable();
+   
+}
+    
+    private void populateEnterpriseComboBox() {
+        cmbEnterprise.removeAllItems();
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                cmbEnterprise.addItem(enterprise.getName());
+            }
+        }
     }
+
+    private Enterprise findEnterpriseByName(String name) {
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (enterprise.getName().equals(name)) {
+                    return enterprise;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblAdmins.getModel();
+        model.setRowCount(0);
+        
+        String selectedName = (String) cmbEnterprise.getSelectedItem();
+        if (selectedName == null) return;
+        
+        Enterprise selectedEnterprise = findEnterpriseByName(selectedName);
+        if (selectedEnterprise == null) return;
+        
+        for (Organization org : selectedEnterprise.getOrganizationDirectory().getOrganizationList()) {
+            for (UserAccount account : org.getUserAccountDirectory().getUserAccountList()) {
+                Object[] row = new Object[4];
+                row[0] = account;
+                row[1] = account.getEmployee().getName();
+                row[2] = account.getRole().getClass().getSimpleName();
+                row[3] = org.getName();
+                model.addRow(row);
+            }
+        }
+    }
+
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,19 +96,285 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        cmbEnterprise = new javax.swing.JComboBox<>();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblAdmins = new javax.swing.JTable();
+        lblUsername = new javax.swing.JLabel();
+        lblPassword = new javax.swing.JLabel();
+        txtUsername = new javax.swing.JTextField();
+        btnBack = new javax.swing.JButton();
+        btnAddAdmin = new javax.swing.JButton();
+        lblTitle = new javax.swing.JLabel();
+        btnDeleteAdmin = new javax.swing.JButton();
+        lblSelectEnterprise = new javax.swing.JLabel();
+        lblEmpName = new javax.swing.JLabel();
+        txtPassword = new javax.swing.JTextField();
+        txtEmpName = new javax.swing.JTextField();
+
+        cmbEnterprise.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cmbEnterprise.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbEnterpriseActionPerformed(evt);
+            }
+        });
+
+        tblAdmins.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Username", "Employee Name", "Role"
+            }
+        ));
+        jScrollPane1.setViewportView(tblAdmins);
+
+        lblUsername.setText("Username:");
+
+        lblPassword.setText("Password:");
+
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
+        btnAddAdmin.setText("AddAdmin");
+        btnAddAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddAdminActionPerformed(evt);
+            }
+        });
+
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblTitle.setText("Manage Enterprise Admins");
+
+        btnDeleteAdmin.setText("DeleteAdmin");
+        btnDeleteAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteAdminActionPerformed(evt);
+            }
+        });
+
+        lblSelectEnterprise.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        lblSelectEnterprise.setText("Select Enterprise:");
+
+        lblEmpName.setText("Name:");
+
+        txtEmpName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmpNameActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(235, 235, 235)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAddAdmin)
+                                .addGap(161, 161, 161)
+                                .addComponent(btnDeleteAdmin))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblUsername)
+                                    .addComponent(lblPassword)
+                                    .addComponent(lblEmpName))
+                                .addGap(110, 110, 110)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtUsername, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE)
+                                    .addComponent(txtPassword)
+                                    .addComponent(txtEmpName)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(324, 324, 324)
+                        .addComponent(lblTitle)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(105, 105, 105)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 671, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblSelectEnterprise)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cmbEnterprise, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnBack)
+                        .addGap(591, 591, 591)))
+                .addGap(0, 79, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(34, 34, 34)
+                .addComponent(btnBack)
+                .addGap(13, 13, 13)
+                .addComponent(lblTitle)
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(lblSelectEnterprise)
+                    .addComponent(cmbEnterprise, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(30, 30, 30)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(31, 31, 31)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblUsername)
+                    .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(39, 39, 39)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPassword)
+                    .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(35, 35, 35)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 74, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAddAdmin)
+                            .addComponent(btnDeleteAdmin))
+                        .addGap(51, 51, 51))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtEmpName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblEmpName))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cmbEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEnterpriseActionPerformed
+        // TODO add your handling code here:
+        populateTable();
+    }//GEN-LAST:event_cmbEnterpriseActionPerformed
+
+    private void txtEmpNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmpNameActionPerformed
+        // TODO add your handling code here:
+         
+  
+    }//GEN-LAST:event_txtEmpNameActionPerformed
+
+    private void btnAddAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAdminActionPerformed
+        // TODO add your handling code here:
+        String username = txtUsername.getText().trim();
+        String password = txtPassword.getText().trim();
+        String empName = txtEmpName.getText().trim();
+        
+        String selectedName = (String) cmbEnterprise.getSelectedItem();
+        Enterprise selectedEnterprise = findEnterpriseByName(selectedName);
+        
+        if (username.isEmpty() || password.isEmpty() || empName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields.");
+            return;
+        }
+        
+        if (selectedEnterprise == null) {
+            JOptionPane.showMessageDialog(this, "Please select an enterprise.");
+            return;
+        }
+        
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise e : network.getEnterpriseDirectory().getEnterpriseList()) {
+                for (Organization org : e.getOrganizationDirectory().getOrganizationList()) {
+                    for (UserAccount ua : org.getUserAccountDirectory().getUserAccountList()) {
+                        if (ua.getUsername().equals(username)) {
+                            JOptionPane.showMessageDialog(this, "Username already exists!");
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (selectedEnterprise.getOrganizationDirectory().getOrganizationList().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "This enterprise has no organizations. Please create one first.");
+            return;
+        }
+        
+        Organization firstOrg = selectedEnterprise.getOrganizationDirectory().getOrganizationList().get(0);
+        
+        Employee employee = firstOrg.getEmployeeDirectory().createEmployee(empName);
+        
+        Role role = null;
+        if (firstOrg.getSupportedRole() != null && !firstOrg.getSupportedRole().isEmpty()) {
+            role = firstOrg.getSupportedRole().get(0);
+        } else {
+            role = new SystemAdminRole();
+        }
+        
+        firstOrg.getUserAccountDirectory().createUserAccount(username, password, employee, role);
+        
+        txtUsername.setText("");
+        txtPassword.setText("");
+        txtEmpName.setText("");
+        
+        populateTable();
+        JOptionPane.showMessageDialog(this, "Admin '" + username + "' created successfully!");
+        
+    }//GEN-LAST:event_btnAddAdminActionPerformed
+
+    private void btnDeleteAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAdminActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblAdmins.getSelectedRow();
+        
+        String selectedName = (String) cmbEnterprise.getSelectedItem();
+        Enterprise selectedEnterprise = findEnterpriseByName(selectedName);
+        
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select an admin to delete.");
+            return;
+        }
+        
+        if (selectedEnterprise == null) {
+            JOptionPane.showMessageDialog(this, "No enterprise selected.");
+            return;
+        }
+        
+        UserAccount selectedAccount = (UserAccount) tblAdmins.getValueAt(selectedRow, 0);
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+                "Are you sure you want to delete '" + selectedAccount.getUsername() + "'?",
+                "Confirm Delete", 
+                JOptionPane.YES_NO_OPTION);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            for (Organization org : selectedEnterprise.getOrganizationDirectory().getOrganizationList()) {
+                if (org.getUserAccountDirectory().getUserAccountList().remove(selectedAccount)) {
+                    break;
+                }
+            }
+            populateTable();
+            JOptionPane.showMessageDialog(this, "Admin deleted successfully!");
+        }
+
+    }//GEN-LAST:event_btnDeleteAdminActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+    userProcessContainer.remove(this);
+    CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+    layout.show(userProcessContainer, "workArea");
+    }//GEN-LAST:event_btnBackActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAddAdmin;
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnDeleteAdmin;
+    private javax.swing.JComboBox<String> cmbEnterprise;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblEmpName;
+    private javax.swing.JLabel lblPassword;
+    private javax.swing.JLabel lblSelectEnterprise;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblUsername;
+    private javax.swing.JTable tblAdmins;
+    private javax.swing.JTextField txtEmpName;
+    private javax.swing.JTextField txtPassword;
+    private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }
