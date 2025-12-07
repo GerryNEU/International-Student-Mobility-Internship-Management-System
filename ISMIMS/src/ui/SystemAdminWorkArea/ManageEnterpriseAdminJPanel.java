@@ -5,10 +5,15 @@
 package ui.SystemAdminWorkArea;
 
 import business.EcoSystem;
+import business.employee.Employee;
 import business.enterprise.Enterprise;
 import business.network.Network;
 import business.organization.Organization;
+import business.role.Role;
+import business.role.SystemAdminRole;
 import business.useraccount.UserAccount;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
@@ -127,6 +132,11 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
         lblPassword.setText("Password:");
 
         btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         btnAddAdmin.setText("AddAdmin");
         btnAddAdmin.addActionListener(new java.awt.event.ActionListener() {
@@ -139,6 +149,11 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
         lblTitle.setText("Manage Enterprise Admins");
 
         btnDeleteAdmin.setText("DeleteAdmin");
+        btnDeleteAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteAdminActionPerformed(evt);
+            }
+        });
 
         lblSelectEnterprise.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
         lblSelectEnterprise.setText("Select Enterprise:");
@@ -235,11 +250,111 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
 
     private void txtEmpNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmpNameActionPerformed
         // TODO add your handling code here:
+         
+  
     }//GEN-LAST:event_txtEmpNameActionPerformed
 
     private void btnAddAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAdminActionPerformed
         // TODO add your handling code here:
+        String username = txtUsername.getText().trim();
+        String password = txtPassword.getText().trim();
+        String empName = txtEmpName.getText().trim();
+        
+        String selectedName = (String) cmbEnterprise.getSelectedItem();
+        Enterprise selectedEnterprise = findEnterpriseByName(selectedName);
+        
+        if (username.isEmpty() || password.isEmpty() || empName.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Please fill in all fields.");
+            return;
+        }
+        
+        if (selectedEnterprise == null) {
+            JOptionPane.showMessageDialog(this, "Please select an enterprise.");
+            return;
+        }
+        
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise e : network.getEnterpriseDirectory().getEnterpriseList()) {
+                for (Organization org : e.getOrganizationDirectory().getOrganizationList()) {
+                    for (UserAccount ua : org.getUserAccountDirectory().getUserAccountList()) {
+                        if (ua.getUsername().equals(username)) {
+                            JOptionPane.showMessageDialog(this, "Username already exists!");
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        
+        if (selectedEnterprise.getOrganizationDirectory().getOrganizationList().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "This enterprise has no organizations. Please create one first.");
+            return;
+        }
+        
+        Organization firstOrg = selectedEnterprise.getOrganizationDirectory().getOrganizationList().get(0);
+        
+        Employee employee = firstOrg.getEmployeeDirectory().createEmployee(empName);
+        
+        Role role = null;
+        if (firstOrg.getSupportedRole() != null && !firstOrg.getSupportedRole().isEmpty()) {
+            role = firstOrg.getSupportedRole().get(0);
+        } else {
+            role = new SystemAdminRole();
+        }
+        
+        firstOrg.getUserAccountDirectory().createUserAccount(username, password, employee, role);
+        
+        txtUsername.setText("");
+        txtPassword.setText("");
+        txtEmpName.setText("");
+        
+        populateTable();
+        JOptionPane.showMessageDialog(this, "Admin '" + username + "' created successfully!");
+        
     }//GEN-LAST:event_btnAddAdminActionPerformed
+
+    private void btnDeleteAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteAdminActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblAdmins.getSelectedRow();
+        
+        String selectedName = (String) cmbEnterprise.getSelectedItem();
+        Enterprise selectedEnterprise = findEnterpriseByName(selectedName);
+        
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select an admin to delete.");
+            return;
+        }
+        
+        if (selectedEnterprise == null) {
+            JOptionPane.showMessageDialog(this, "No enterprise selected.");
+            return;
+        }
+        
+        UserAccount selectedAccount = (UserAccount) tblAdmins.getValueAt(selectedRow, 0);
+        
+        int confirm = JOptionPane.showConfirmDialog(this, 
+                "Are you sure you want to delete '" + selectedAccount.getUsername() + "'?",
+                "Confirm Delete", 
+                JOptionPane.YES_NO_OPTION);
+        
+        if (confirm == JOptionPane.YES_OPTION) {
+            for (Organization org : selectedEnterprise.getOrganizationDirectory().getOrganizationList()) {
+                if (org.getUserAccountDirectory().getUserAccountList().remove(selectedAccount)) {
+                    break;
+                }
+            }
+            populateTable();
+            JOptionPane.showMessageDialog(this, "Admin deleted successfully!");
+        }
+
+    }//GEN-LAST:event_btnDeleteAdminActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+    userProcessContainer.remove(this);
+    CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+    layout.show(userProcessContainer, "workArea");
+    }//GEN-LAST:event_btnBackActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
