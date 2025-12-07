@@ -76,15 +76,24 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
             // They can proceed to visa (logic in button action will ensure they select the right row)
             btnRequestVisa.setEnabled(true); 
         } else {
-            // No offer accepted yet.
-            btnRequestVisa.setEnabled(false); // Cannot apply for visa yet
-            
-            // Can only accept if they have at least one admission
-            if(hasAdmittedApps){
-                btnAccept.setEnabled(true);
-            } else {
-                btnAccept.setEnabled(false);
+        // No offer accepted yet.
+        btnRequestVisa.setEnabled(false); // Cannot apply for visa yet
+
+        boolean canAccept = false;
+        for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof StudyAbroadApplication) {
+                StudyAbroadApplication app = (StudyAbroadApplication) request;
+                String status = app.getStatus();
+
+                // Check if: Admitted AND Financial Aid Calculated
+                if ("Admitted".equals(status) && app.isAidSaved()) {
+                    canAccept = true;
+                    break;
+                }
             }
+        }
+
+        btnAccept.setEnabled(canAccept);
         }
     }
 

@@ -6,6 +6,8 @@ package ui.FinancialAuditorRole;
 
 import business.EcoSystem;
 import business.workqueue.FinancialClearanceRequest;
+import business.workqueue.StudyAbroadApplication;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 /**
  *
@@ -32,30 +34,56 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
     }
 
     private void populateData() {
-       business.workqueue.StudyAbroadApplication app = request.getStudentApplication();
+    StudyAbroadApplication app = request.getStudentApplication();
     
-        if (app != null) {
-            txtStudent.setText(app.getSender().getEmployee().getName());
-            txtMajor.setText(app.getMajor());
-            txtTargetUni.setText(app.getSelectedUniversity());
-        } else {
-            txtStudent.setText("N/A");
-            txtMajor.setText("N/A");
-            txtTargetUni.setText("N/A");
-        }
-
-        txtGrantRequested.setText(String.valueOf(request.getGrantAmountRequested()));
-
-        // Ensure read-only fields are disabled
-        txtStudent.setEnabled(false);
-        txtMajor.setEnabled(false);
-        txtTargetUni.setEnabled(false);
-        txtGrantRequested.setEnabled(false);
-
-        // Clear editable fields
-        txtApprovedAmount.setText("");
-        txtComments.setText("");
+    if (app == null) {
+        JOptionPane.showMessageDialog(null, 
+            "Error: Cannot find student application.");
+        return;
     }
+    
+    txtStudent.setText(app.getSender().getEmployee().getName());
+    txtMajor.setText(app.getMajor());  
+    txtGPA.setText(String.valueOf(app.getCurrentGPA()));  
+    txtTargetUni.setText(app.getSelectedUniversity());  
+    
+    double requestedAmount = request.getGrantAmountRequested();
+    if (requestedAmount > 0) {
+        txtGrantRequested.setText(String.valueOf(requestedAmount));
+    } else {
+        txtGrantRequested.setText("N/A");
+    }
+    
+    txtStudent.setEnabled(false);
+    txtMajor.setEnabled(false);
+    txtGPA.setEnabled(false);
+    txtTargetUni.setEnabled(false);
+    txtGrantRequested.setEnabled(false);
+    
+    if (!app.isAidSaved()) {
+
+        btnSaveAid.setEnabled(true);
+        btnApprove.setEnabled(false);
+        txtApprovedAmount.setEnabled(true);
+        
+    } else if (app.isAidSaved() && !app.isAidApproved()) {
+        btnSaveAid.setEnabled(false);
+        txtApprovedAmount.setText(String.valueOf(app.getGrantAmount()));
+        txtApprovedAmount.setEnabled(false);
+        
+        if ("Offer Accepted".equals(app.getStatus())) {
+            btnApprove.setEnabled(true);
+        } else {
+            btnApprove.setEnabled(false);
+        }
+        
+    } else if (app.isAidApproved()) {
+        btnSaveAid.setEnabled(false);
+        btnApprove.setEnabled(false);
+        txtApprovedAmount.setText(String.valueOf(app.getGrantAmount()));
+        txtApprovedAmount.setEnabled(false);
+    }
+}
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -80,6 +108,9 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
         txtComments = new javax.swing.JTextField();
         btnApprove = new javax.swing.JButton();
         btnBack = new javax.swing.JButton();
+        btnSaveAid = new javax.swing.JButton();
+        lblGPA = new javax.swing.JLabel();
+        txtGPA = new javax.swing.JTextField();
 
         lblTitle.setFont(new java.awt.Font("Microsoft YaHei UI", 1, 24)); // NOI18N
         lblTitle.setText("Process Financial Clearance Request");
@@ -96,7 +127,7 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
 
         lblComments.setText("Comments:");
 
-        btnApprove.setText("Calculate & Approve Scholarship");
+        btnApprove.setText(" Approve Scholarship");
         btnApprove.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnApproveActionPerformed(evt);
@@ -110,6 +141,15 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
             }
         });
 
+        btnSaveAid.setText("Save Aid Amount");
+        btnSaveAid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveAidActionPerformed(evt);
+            }
+        });
+
+        lblGPA.setText("GPA:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -117,41 +157,40 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(145, 145, 145)
-                        .addComponent(lblTitle))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(99, 99, 99)
-                        .addComponent(btnApprove))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(202, 202, 202)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtMajor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblMajor)
-                                    .addComponent(lblTargetUni)
-                                    .addComponent(lblStudent))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(178, 178, 178)
-                                        .addComponent(txtTargetUni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                            .addComponent(lblMajor)
+                            .addComponent(lblTargetUni)
+                            .addComponent(lblStudent))
+                        .addGap(178, 178, 178)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtTargetUni, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                            .addComponent(txtMajor, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtStudent)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(193, 193, 193)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(lblGrantRequested)
                             .addComponent(lblComments)
-                            .addComponent(lblApprovedAmount))
+                            .addComponent(lblApprovedAmount)
+                            .addComponent(lblGPA))
                         .addGap(178, 178, 178)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtComments, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                            .addComponent(txtApprovedAmount)
+                            .addComponent(txtGrantRequested)
+                            .addComponent(txtGPA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(145, 145, 145)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtGrantRequested, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(txtComments, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtApprovedAmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnBack))))
-                .addContainerGap(213, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnSaveAid)
+                                .addGap(66, 66, 66)
+                                .addComponent(btnApprove)
+                                .addGap(76, 76, 76)
+                                .addComponent(btnBack))
+                            .addComponent(lblTitle))))
+                .addContainerGap(142, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -162,11 +201,11 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblStudent)
                     .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(37, 37, 37)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblMajor)
                     .addComponent(txtMajor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(31, 31, 31)
+                .addGap(34, 34, 34)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTargetUni)
                     .addComponent(txtTargetUni, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -174,7 +213,14 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtGrantRequested, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblGrantRequested))
-                .addGap(89, 89, 89)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(lblGPA))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(txtGPA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(48, 48, 48)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblApprovedAmount)
@@ -186,82 +232,60 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
                         .addComponent(txtComments, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(47, 47, 47)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnApprove)
-                    .addComponent(btnBack))
+                    .addComponent(btnBack)
+                    .addComponent(btnSaveAid)
+                    .addComponent(btnApprove))
                 .addContainerGap(68, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
         // TODO add your handling code here:
-        String approvedAmtStr = txtApprovedAmount.getText().trim();
-    
-    if (approvedAmtStr.isEmpty()) {
+        StudyAbroadApplication app = request.getStudentApplication();
+    if (app == null) {
         javax.swing.JOptionPane.showMessageDialog(null, 
-            "Please enter the approved amount.");
+            "Error: Cannot find student application.");
         return;
     }
     
-    try {
-        double approvedAmount = Double.parseDouble(approvedAmtStr);
-        
-        // Validate amount is positive
-        if (approvedAmount <= 0) {
-            javax.swing.JOptionPane.showMessageDialog(null, 
-                "Approved amount must be greater than 0.");
-            return;
-        }
-        
-        // 2. Update FinancialClearanceRequest
-        request.setApprovedAmount(approvedAmount);
-        request.setStatus("Calculated Aid");
-        request.setResult("Scholarship calculated: $" + approvedAmount);
-        
-        // Add comments if provided
-        String comments = txtComments.getText().trim();
-        if (!comments.isEmpty()) {
-            request.setResult(request.getResult() + " - " + comments);
-        }
-        
-        // 3. Get the original StudyAbroadApplication
-        business.workqueue.StudyAbroadApplication studentApp = request.getStudentApplication();
-        
-        if (studentApp == null) {
-            javax.swing.JOptionPane.showMessageDialog(null, 
-                "Error: Cannot find student application.");
-            return;
-        }
-        
-        // 4. Update StudyAbroadApplication with scholarship info
-        studentApp.setScholarshipAmount(approvedAmount);
-        studentApp.setFinancialStatus("Aid Calculated");
-        
-        // Update application status
-        String currentStatus = studentApp.getStatus();
-        if (currentStatus == null || currentStatus.equals("Pending Financial Review")) {
-            studentApp.setStatus("Financial Clearance Approved");
-        }
-        
-        // Update result message
-        studentApp.setResult("Scholarship approved: $" + approvedAmount + 
-                           " (waiting for admission offer)");
-        
-        // 5. Show success message
+    if (!"Offer Accepted".equals(app.getStatus())) {
         javax.swing.JOptionPane.showMessageDialog(null, 
-            "✅ Scholarship Calculated Successfully!\n\n" +
-            "Student: " + studentApp.getSender().getEmployee().getName() + "\n" +
-            "Approved Amount: $" + approvedAmount + "\n" +
-            "Status: Aid Calculated\n\n" +
-            "The student can now view their scholarship amount.\n" +
-            "Waiting for admission offer from host university.");
-        
-        // 6. Go back to work area
-        goBack();
-        
-    } catch (NumberFormatException e) {
-        javax.swing.JOptionPane.showMessageDialog(null, 
-            "Please enter a valid number for the approved amount.");
+            "❌ Cannot approve aid yet!\n\n" +
+            "Student must accept the offer first.\n" +
+            "Current application status: " + app.getStatus() + "\n\n" +
+            "Please wait for student to accept the offer.");
+        return;
     }
+    if (!app.isAidSaved()) {
+        javax.swing.JOptionPane.showMessageDialog(null, 
+            "Error: Aid amount not saved yet.\n" +
+            "Please save the aid amount first.");
+        return;
+    }
+    
+    app.setAidApproved(true);
+    request.setStatus("Approved");
+    
+    double aidAmount = app.getGrantAmount();
+    
+    String currentResult = app.getResult() != null ? app.getResult() : "";
+    app.setResult(currentResult + " | Financial Aid APPROVED: $" + aidAmount);
+    
+    String comments = txtComments.getText().trim();
+    if (!comments.isEmpty()) {
+        request.setResult("Financial aid approved: $" + aidAmount + " - " + comments);
+    } else {
+        request.setResult("Financial aid approved: $" + aidAmount);
+    }
+    
+    javax.swing.JOptionPane.showMessageDialog(null, 
+        "✅ Financial Aid Approved!\n\n" +
+        "Student: " + app.getSender().getEmployee().getName() + "\n" +
+        "Approved Amount: $" + aidAmount + "\n" +
+        "Status: Approved\n\n" +
+        "Student can now proceed with enrollment.");
+    
+    goBack();
     }//GEN-LAST:event_btnApproveActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
@@ -279,12 +303,60 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
             layout.previous(userProcessContainer);
     }//GEN-LAST:event_btnBackActionPerformed
 
+    private void btnSaveAidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveAidActionPerformed
+       String amtText = txtApprovedAmount.getText().trim();
+    
+    if (amtText.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Please enter an aid amount.");
+        return;
+    }
+    
+    double aidAmount = 0;
+    try {
+        aidAmount = Double.parseDouble(amtText);
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(null, "Invalid amount format.");
+        return;
+    }
+    
+    if (aidAmount <= 0) {
+        JOptionPane.showMessageDialog(null, "Amount must be greater than 0.");
+        return;
+    }
+    
+    StudyAbroadApplication app = request.getStudentApplication();
+    if (app != null) {
+        app.setAidSaved(true);
+        app.setGrantAmount(aidAmount);
+        
+        String currentResult = app.getResult() != null ? app.getResult() : "";
+        
+        String comments = txtComments.getText().trim();
+        if (!comments.isEmpty()) {
+            app.setResult(currentResult + " | Aid: $" + aidAmount + " - " + comments);
+        } else {
+            app.setResult(currentResult + " | Aid: $" + aidAmount + " (Pending Acceptance)");
+        }
+    }
+    
+    request.setStatus("Aid Saved (Pending Student Acceptance)");
+    request.setApprovedAmount(aidAmount);
+    
+    JOptionPane.showMessageDialog(null, 
+        "Aid Amount Saved: $" + aidAmount + "\n" +
+        "Student must accept offer before final approval.");
+    
+    goBack();
+    }//GEN-LAST:event_btnSaveAidActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApprove;
     private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnSaveAid;
     private javax.swing.JLabel lblApprovedAmount;
     private javax.swing.JLabel lblComments;
+    private javax.swing.JLabel lblGPA;
     private javax.swing.JLabel lblGrantRequested;
     private javax.swing.JLabel lblMajor;
     private javax.swing.JLabel lblStudent;
@@ -292,6 +364,7 @@ public class ProcessFinancialClearanceJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblTitle;
     private javax.swing.JTextField txtApprovedAmount;
     private javax.swing.JTextField txtComments;
+    private javax.swing.JTextField txtGPA;
     private javax.swing.JTextField txtGrantRequested;
     private javax.swing.JTextField txtMajor;
     private javax.swing.JTextField txtStudent;
