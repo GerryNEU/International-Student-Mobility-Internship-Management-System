@@ -16,6 +16,7 @@ public class VisaSupportRequest extends WorkRequest {
     private boolean financialProofVerified;
     private boolean visaIssued;
     private String visaNumber;
+    private StudyAbroadApplication studyAbroadApplication;
 
     public VisaSupportRequest() {
         super();
@@ -71,6 +72,15 @@ public class VisaSupportRequest extends WorkRequest {
     public void setVisaNumber(String visaNumber) {
         this.visaNumber = visaNumber;
     }
+
+    public StudyAbroadApplication getStudyAbroadApplication() {
+        return studyAbroadApplication;
+    }
+
+    public void setStudyAbroadApplication(StudyAbroadApplication studyAbroadApplication) {
+        this.studyAbroadApplication = studyAbroadApplication;
+    }
+    
     
     @Override
     public String toString() {

@@ -9,6 +9,7 @@ import business.enterprise.Enterprise;
 import business.network.Network;
 import business.organization.OperationsOrganization;
 import business.organization.Organization;
+import business.workqueue.StudyAbroadApplication;
 import business.workqueue.VisaSupportRequest;
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -52,6 +53,14 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
         
         chkLegalCheck.setSelected(request.isLegalCheckPassed());
         chkFinancialProof.setSelected(request.isFinancialProofVerified());
+        
+        StudyAbroadApplication app = request.getStudyAbroadApplication();
+        if (app != null && app.isAidApproved()) {
+            txtAid.setText("$" + String.format("%.2f", app.getGrantAmount()));
+        } else {
+            txtAid.setText("N/A");
+        }
+        txtAid.setEnabled(false);
     }
     
     private void goBack() {
@@ -107,6 +116,8 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
         btnReject = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtNotes = new javax.swing.JTextArea();
+        lblAid = new javax.swing.JLabel();
+        txtAid = new javax.swing.JTextField();
 
         btnBack.setText("<< Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
@@ -154,6 +165,10 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
         txtNotes.setRows(5);
         jScrollPane1.setViewportView(txtNotes);
 
+        lblAid.setText("Finance Aid:");
+
+        txtAid.setEditable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -170,14 +185,16 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(lblPassport)
                                     .addComponent(lblStudent)
-                                    .addComponent(lblCountry))
+                                    .addComponent(lblCountry)
+                                    .addComponent(lblAid))
                                 .addGap(39, 39, 39)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtPassport, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtCountry, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtStudent, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                                    .addComponent(txtPassport, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                                    .addComponent(txtCountry, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
                                     .addComponent(chkFinancialProof)
-                                    .addComponent(chkLegalCheck)))
+                                    .addComponent(chkLegalCheck)
+                                    .addComponent(txtAid)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(9, 9, 9)
                                 .addComponent(btnApprove)
@@ -212,15 +229,17 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCountry))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 56, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblAid)
+                    .addComponent(txtAid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addComponent(chkLegalCheck)
                 .addGap(18, 18, 18)
                 .addComponent(chkFinancialProof)
                 .addGap(44, 44, 44)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblNotes)
-                        .addGap(43, 43, 43))
+                    .addComponent(lblNotes)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(84, 84, 84)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -285,10 +304,12 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox chkLegalCheck;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblAid;
     private javax.swing.JLabel lblCountry;
     private javax.swing.JLabel lblNotes;
     private javax.swing.JLabel lblPassport;
     private javax.swing.JLabel lblStudent;
+    private javax.swing.JTextField txtAid;
     private javax.swing.JTextField txtCountry;
     private javax.swing.JTextArea txtNotes;
     private javax.swing.JTextField txtPassport;

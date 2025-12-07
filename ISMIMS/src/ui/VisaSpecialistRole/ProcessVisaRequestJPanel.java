@@ -4,6 +4,13 @@
  */
 package ui.VisaSpecialistRole;
 
+import business.workqueue.StudyAbroadApplication;
+import business.workqueue.VisaSupportRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import java.util.Random;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 /**
  *
  * @author gerrysu
@@ -15,7 +22,56 @@ public class ProcessVisaRequestJPanel extends javax.swing.JPanel {
      */
     public ProcessVisaRequestJPanel() {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.request = request;
+        
+        populateData();
     }
+    
+    private void populateData(){
+    if(request.getSender() != null){
+        txtStudent.setText(request.getSender().getEmployee().getName());
+    }
+    txtPassport.setText(request.getPassportNumber());
+    txtCountry.setText(request.getIssuingCountry());
+
+    StudyAbroadApplication app = request.getStudyAbroadApplication();
+    if (app != null) {
+        if (app.isAidApproved()) {
+            double aidAmount = app.getGrantAmount();
+            txtAid.setText("$" + String.format("%.2f", aidAmount));
+            chkFinancial.setSelected(true); 
+        } else if (app.isAidSaved()) {
+
+            txtAid.setText("Pending Approval");
+            chkFinancial.setSelected(false);
+        } else {
+            txtAid.setText("Not Available");
+            chkFinancial.setSelected(false);
+        }
+    } else {
+        txtAid.setText("N/A");
+        chkFinancial.setSelected(false);
+    }
+    
+    // Read-only fields
+    txtStudent.setEnabled(false);
+    txtPassport.setEnabled(false);
+    txtCountry.setEnabled(false);
+    txtAid.setEnabled(false);  
+    
+    // Status checks
+    chkLegal.setSelected(request.isLegalCheckPassed());
+
+    chkLegal.setEnabled(false); // Specialist cannot change these
+    chkFinancial.setEnabled(false);
+    
+    // If already issued, show number
+    if(request.isVisaIssued()){
+        txtVisaNumber.setText(request.getVisaNumber());
+        btnIssue.setEnabled(false);
+    }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -26,19 +82,153 @@ public class ProcessVisaRequestJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        btnBack = new javax.swing.JButton();
+        btnIssue = new javax.swing.JButton();
+        chkLegal = new javax.swing.JCheckBox();
+        chkFinancial = new javax.swing.JCheckBox();
+        lblTitle = new javax.swing.JLabel();
+        lblStudent = new javax.swing.JLabel();
+        lblPassport = new javax.swing.JLabel();
+        lblCountry = new javax.swing.JLabel();
+        lblVisaNumber = new javax.swing.JLabel();
+        lblCheck = new javax.swing.JLabel();
+        txtStudent = new javax.swing.JTextField();
+        txtPassport = new javax.swing.JTextField();
+        txtCountry = new javax.swing.JTextField();
+        txtVisaNumber = new javax.swing.JTextField();
+        lblAid = new javax.swing.JLabel();
+        txtAid = new javax.swing.JTextField();
+
+        btnBack.setText("<< Back");
+
+        btnIssue.setText("Generate Visa & Issue");
+        btnIssue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIssueActionPerformed(evt);
+            }
+        });
+
+        chkLegal.setText("Legal Background Check Passed");
+
+        chkFinancial.setText("Financial Proof Verified");
+
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        lblTitle.setText("Issue Student Visa");
+
+        lblStudent.setText("Student Name:");
+
+        lblPassport.setText("Passport No:");
+
+        lblCountry.setText("Destination Country:");
+
+        lblVisaNumber.setText("Visa Number:");
+
+        lblCheck.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblCheck.setText("Verification Status (ReadOnly):");
+
+        lblAid.setText("Finance Aid");
+
+        txtAid.setEditable(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblCheck)
+                        .addGap(318, 318, 318))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(chkFinancial)
+                            .addComponent(chkLegal))
+                        .addGap(327, 327, 327))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(178, 178, 178)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnBack, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(lblPassport)
+                                    .addComponent(lblStudent)
+                                    .addComponent(lblCountry)
+                                    .addComponent(lblVisaNumber)
+                                    .addComponent(lblAid))
+                                .addGap(98, 98, 98)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtVisaNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                                    .addComponent(txtCountry)
+                                    .addComponent(txtPassport)
+                                    .addComponent(txtStudent)
+                                    .addComponent(txtAid)))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(368, 368, 368)
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(367, 367, 367)
+                        .addComponent(btnIssue)))
+                .addContainerGap(332, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(lblTitle)
+                .addGap(17, 17, 17)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblStudent)
+                    .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPassport)
+                    .addComponent(txtPassport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCountry)
+                    .addComponent(txtCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblVisaNumber)
+                    .addComponent(txtVisaNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblAid)
+                    .addComponent(txtAid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
+                .addComponent(lblCheck)
+                .addGap(18, 18, 18)
+                .addComponent(chkLegal)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chkFinancial)
+                .addGap(96, 96, 96)
+                .addComponent(btnIssue)
+                .addGap(159, 159, 159)
+                .addComponent(btnBack)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnIssue;
+    private javax.swing.JCheckBox chkFinancial;
+    private javax.swing.JCheckBox chkLegal;
+    private javax.swing.JLabel lblAid;
+    private javax.swing.JLabel lblCheck;
+    private javax.swing.JLabel lblCountry;
+    private javax.swing.JLabel lblPassport;
+    private javax.swing.JLabel lblStudent;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JLabel lblVisaNumber;
+    private javax.swing.JTextField txtAid;
+    private javax.swing.JTextField txtCountry;
+    private javax.swing.JTextField txtPassport;
+    private javax.swing.JTextField txtStudent;
+    private javax.swing.JTextField txtVisaNumber;
     // End of variables declaration//GEN-END:variables
 }
