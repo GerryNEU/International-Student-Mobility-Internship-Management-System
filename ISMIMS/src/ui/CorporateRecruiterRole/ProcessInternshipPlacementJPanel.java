@@ -4,19 +4,49 @@
  */
 package ui.CorporateRecruiterRole;
 
+import business.workqueue.InternshipPlacementRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gerrysu
  */
 public class ProcessInternshipPlacementJPanel extends javax.swing.JPanel {
-
+    
+    private JPanel userProcessContainer;
+    private InternshipPlacementRequest request;
+    
     /**
      * Creates new form ProcessInternshipPlacementJPanel
      */
     public ProcessInternshipPlacementJPanel() {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.request = request;
+        
+        populateData();
     }
-
+    
+    
+    private void populateData() {
+        if (request.getSender() != null && request.getSender().getEmployee() != null) {
+            txtStudent.setText(request.getSender().getEmployee().getName());
+        } else {
+            txtStudent.setText("Unknown Student");
+        }
+        
+        txtSkills.setText(request.getStudentSkills());
+        txtIndustry.setText(request.getPreferredIndustry());
+        
+        txtStudent.setEnabled(false);
+        txtSkills.setEnabled(false);
+        txtIndustry.setEnabled(false);
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,19 +56,31 @@ public class ProcessInternshipPlacementJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
+
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
+        jLabel1.setText("Evaluate Candidate");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(190, 190, 190)
+                .addComponent(jLabel1)
+                .addContainerGap(189, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jLabel1)
+                .addContainerGap(394, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
 }
