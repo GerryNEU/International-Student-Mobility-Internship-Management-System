@@ -85,30 +85,11 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
     }
 
     private StudyAbroadApplication findStudentApplication() {
-        if (request == null || request.getSender() == null) {
-            return null;
-        }
-        
-        // Traverse all organizations to find the student's StudyAbroadApplication
-        for (Network network : system.getNetworkList()) {
-            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
-                for (Organization org : enterprise.getOrganizationDirectory().getOrganizationList()) {
-                    for (WorkRequest wr : org.getWorkQueue().getWorkRequestList()) {
-                        if (wr instanceof StudyAbroadApplication) {
-                            StudyAbroadApplication app = (StudyAbroadApplication) wr;
-                            // Check if it's the same student
-                            if (app.getSender() != null && 
-                                app.getSender().equals(request.getSender())) {
-                                return app;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
+    if (request == null) {
         return null;
     }
+    return request.getStudyAbroadApplication();
+}
     
     private void goBack() {
         userProcessContainer.remove(this);
