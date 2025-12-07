@@ -16,13 +16,182 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="400" max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="lblCheck" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="318" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="chkFinancial" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkLegal" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="327" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
+          <Group type="102" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="178" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="btnBack" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Component id="lblPassport" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblStudent" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblCountry" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblVisaNumber" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblAid" alignment="1" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="98" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="txtVisaNumber" alignment="0" pref="163" max="32767" attributes="0"/>
+                                  <Component id="txtCountry" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txtPassport" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txtStudent" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="txtAid" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                          </Group>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="368" max="-2" attributes="0"/>
+                      <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="367" max="-2" attributes="0"/>
+                      <Component id="btnIssue" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace pref="332" max="32767" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <EmptySpace min="0" pref="300" max="32767" attributes="0"/>
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace min="-2" pref="26" max="-2" attributes="0"/>
+              <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="17" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblStudent" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtStudent" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblPassport" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtPassport" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblCountry" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtCountry" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblVisaNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtVisaNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblAid" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtAid" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="70" max="32767" attributes="0"/>
+              <Component id="lblCheck" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="chkLegal" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="chkFinancial" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="96" max="-2" attributes="0"/>
+              <Component id="btnIssue" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="159" max="-2" attributes="0"/>
+              <Component id="btnBack" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JButton" name="btnBack">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="&lt;&lt; Back"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnIssue">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Generate Visa &amp; Issue"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnIssueActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="chkLegal">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Legal Background Check Passed"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="chkFinancial">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Financial Proof Verified"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblTitle">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Helvetica Neue" size="24" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Issue Student Visa"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblStudent">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Student Name:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPassport">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Passport No:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblCountry">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Destination Country:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblVisaNumber">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Visa Number:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblCheck">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Helvetica Neue" size="18" style="0"/>
+        </Property>
+        <Property name="text" type="java.lang.String" value="Verification Status (ReadOnly):"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtStudent">
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtPassport">
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtCountry">
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtVisaNumber">
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblAid">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Finance Aid"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtAid">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+  </SubComponents>
 </Form>

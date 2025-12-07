@@ -19,34 +19,17 @@
           <Group type="102" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="145" max="-2" attributes="0"/>
-                      <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
-                      <Component id="btnApprove" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="202" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="txtMajor" min="-2" max="-2" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="lblMajor" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblTargetUni" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblStudent" alignment="1" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <EmptySpace min="-2" pref="178" max="-2" attributes="0"/>
-                                      <Component id="txtTargetUni" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Component id="txtStudent" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                          </Group>
+                          <Component id="lblMajor" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTargetUni" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblStudent" alignment="1" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="178" pref="178" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="txtTargetUni" alignment="0" pref="129" max="32767" attributes="0"/>
+                          <Component id="txtMajor" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtStudent" alignment="1" max="32767" attributes="0"/>
                       </Group>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
@@ -55,19 +38,31 @@
                           <Component id="lblGrantRequested" min="-2" max="-2" attributes="0"/>
                           <Component id="lblComments" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="lblApprovedAmount" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblGPA" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="178" max="-2" attributes="0"/>
+                      <EmptySpace min="178" pref="178" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="txtComments" pref="129" max="32767" attributes="0"/>
+                          <Component id="txtApprovedAmount" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtGrantRequested" alignment="0" max="32767" attributes="0"/>
+                          <Component id="txtGPA" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="145" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtGrantRequested" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
-                              <Component id="txtComments" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="txtApprovedAmount" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="btnSaveAid" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="66" max="-2" attributes="0"/>
+                              <Component id="btnApprove" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="76" max="-2" attributes="0"/>
+                              <Component id="btnBack" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="btnBack" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTitle" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="213" max="32767" attributes="0"/>
+              <EmptySpace pref="142" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -81,12 +76,12 @@
                   <Component id="lblStudent" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtStudent" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="lblMajor" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtMajor" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="lblMajor" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="txtMajor" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="31" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="lblTargetUni" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="txtTargetUni" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -96,7 +91,17 @@
                   <Component id="txtGrantRequested" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="lblGrantRequested" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                      <Component id="lblGPA" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="txtGPA" min="-2" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace min="-2" pref="48" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="lblApprovedAmount" min="-2" max="-2" attributes="0"/>
@@ -111,8 +116,9 @@
               </Group>
               <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="btnApprove" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="btnBack" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnSaveAid" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnApprove" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="68" max="32767" attributes="0"/>
           </Group>
@@ -172,7 +178,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="btnApprove">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Calculate &amp; Approve Scholarship"/>
+        <Property name="text" type="java.lang.String" value=" Approve Scholarship"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnApproveActionPerformed"/>
@@ -185,6 +191,21 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBackActionPerformed"/>
       </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnSaveAid">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Save Aid Amount"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnSaveAidActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblGPA">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="GPA:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="txtGPA">
     </Component>
   </SubComponents>
 </Form>

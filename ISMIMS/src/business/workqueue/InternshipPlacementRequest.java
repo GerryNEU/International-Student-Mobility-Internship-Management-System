@@ -10,15 +10,17 @@ import java.util.ArrayList;
  *
  * @author gerrysu
  */
-public class InternshipPlacementRequest {
+public class InternshipPlacementRequest extends WorkRequest{
 
     private String studentSkills;
     private String preferredIndustry;
     private String companyPlaced;
     private boolean offerAccepted;
+    private String positionOffered;
     private ArrayList<String> resumeKeywords;
 
     public InternshipPlacementRequest(){
+        super();
         resumeKeywords = new ArrayList<>();
     }
 
@@ -53,4 +55,21 @@ public class InternshipPlacementRequest {
     public void setOfferAccepted(boolean offerAccepted) {
         this.offerAccepted = offerAccepted;
     }    
+    
+    public String getPositionOffered() {
+        return positionOffered;
+    }
+
+    public void setPositionOffered(String positionOffered) {
+        this.positionOffered = positionOffered;
+    }
+    
+    @Override
+    public String toString() {
+        if (getSender() != null) {
+            return getSender().getEmployee().getName();
+        }
+        return "Internship Request";
+    }
+    
 }
