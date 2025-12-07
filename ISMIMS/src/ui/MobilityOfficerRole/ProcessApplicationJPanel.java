@@ -15,6 +15,8 @@ import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import business.organization.FinancialAidOrganization;
+import business.workqueue.FinancialClearanceRequest;
 
 /**
  *
@@ -51,6 +53,7 @@ public class ProcessApplicationJPanel extends javax.swing.JPanel {
         txtGPA.setEnabled(false);
         txtTargetUni.setEnabled(false);
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -225,6 +228,41 @@ public class ProcessApplicationJPanel extends javax.swing.JPanel {
             nomination.setStatus("Nominated");
             
             targetOrg.getWorkQueue().getWorkRequestList().add(nomination);
+            
+            Organization finAidOrg = null;
+            for (Network n : system.getNetworkList()) {
+                for (Enterprise e : n.getEnterpriseDirectory().getEnterpriseList()) {
+                    if (e instanceof business.enterprise.HomeUniversityEnterprise) {
+                        for (Organization o : e.getOrganizationDirectory().getOrganizationList()) {
+                            if (o instanceof FinancialAidOrganization) {
+                                finAidOrg = o;
+                                break;
+                            }
+                        }
+                    }
+                    if (finAidOrg != null) break;
+                }
+                if (finAidOrg != null) break;
+            }
+
+            if (finAidOrg != null) {
+                FinancialClearanceRequest finRequest = new FinancialClearanceRequest();
+                finRequest.setStudentApplication(request);
+                finRequest.setSender(request.getSender());
+                finRequest.setMessage("Financial clearance needed for " + 
+                                     request.getSender().getEmployee().getName());
+                finRequest.setStatus("Pending Review");
+
+                // Set default grant amount (can be estimated based on GPA or other criteria)
+                
+
+
+                finAidOrg.getWorkQueue().getWorkRequestList().add(finRequest);
+
+                System.out.println("✓ Created FinancialClearanceRequest for " + 
+                                  request.getSender().getEmployee().getName());
+            }
+
             JOptionPane.showMessageDialog(null, "Student Nominated! Sent to " + targetUniName);
             goBack();
         } else {

@@ -271,6 +271,52 @@ public class ConfigureASystem {
         }
         
         System.out.println("✓ Generated " + numNominations + " nomination requests");
+        Organization finOrg = findOrganizationByType(homeUniv, Organization.Type.FinancialAid);
+
+        if (finOrg != null && generatedStudents.size() > 0) {
+            int numFinancialRequests = numStudents / 3; // About 33% of students
+
+            for (int i = 0; i < numFinancialRequests && i < generatedStudents.size(); i++) {
+                UserAccount studentAccount = generatedStudents.get(i);
+
+                // Create a study abroad application for reference
+                StudyAbroadApplication app = new StudyAbroadApplication();
+                app.setSender(studentAccount);
+                app.setMajor(majors[random.nextInt(majors.length)]);
+                app.setCurrentGPA(generateRandomGPA());
+                app.setSelectedUniversity(universities[random.nextInt(universities.length)]);
+                app.setMessage("Financial aid needed for study abroad");
+                app.setStatus("Nominated");
+
+                // Create financial clearance request
+                FinancialClearanceRequest fcr = new FinancialClearanceRequest();
+                fcr.setStudentApplication(app);
+                fcr.setSender(studentAccount);
+                fcr.setMessage("Financial clearance request for " + 
+                              studentAccount.getEmployee().getName());
+                fcr.setStatus("Pending Review");
+
+                // Set grant amount based on GPA
+                double gpa = app.getCurrentGPA();
+                double grantRequested;
+                if (gpa >= 3.8) {
+                    grantRequested = 20000.0;
+                } else if (gpa >= 3.5) {
+                    grantRequested = 15000.0;
+                } else if (gpa >= 3.0) {
+                    grantRequested = 10000.0;
+                } else {
+                    grantRequested = 5000.0;
+                }
+                fcr.setGrantAmountRequested(grantRequested);
+
+                // Add to Financial Aid Organization's queue
+                finOrg.getWorkQueue().getWorkRequestList().add(fcr);
+            }
+
+            System.out.println("✓ Generated " + numFinancialRequests + 
+                              " financial clearance requests");
+        }
         System.out.println("========================================");
         System.out.println("Data population complete!");
     }
