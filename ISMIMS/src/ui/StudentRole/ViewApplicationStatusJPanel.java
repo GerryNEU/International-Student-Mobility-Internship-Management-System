@@ -36,64 +36,76 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
     }
     
     private void populateTable(){
-        btnRequestVisa.setEnabled(false); // Default disabled
-        btnAccept.setEnabled(false); // Default disablee);
+        btnRequestVisa.setEnabled(false); 
+        btnAccept.setEnabled(false); 
         
         DefaultTableModel model = (DefaultTableModel) tblStatus.getModel();
         model.setRowCount(0);
         
         boolean hasAcceptedOffer = false;
-        boolean hasAdmittedApps = false;
         
-        // 1. First Pass: Check overall state
+        // 1. 遍历并填充表格，同时检查是否有已接受的 Offer
         for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()){
             if(request instanceof StudyAbroadApplication){
-                // Check if student has already committed to a university
+                StudyAbroadApplication app = (StudyAbroadApplication) request;
                 String status = request.getStatus();
                 if("Offer Accepted".equals(status) || "Visa Issued".equals(status) || "Visa Applied".equals(status)){
                     hasAcceptedOffer = true;
                 }
-                if("Admitted".equals(status)){
-                    hasAdmittedApps = true;
-                }
                 
                 Object[] row = new Object[4];
-                row[0] = request;
-                row[1] = ((StudyAbroadApplication) request).getSelectedUniversity();
+                row[0] = app;
+                row[1] = app.getSelectedUniversity();
                 row[2] = status;
-                row[3] = ((StudyAbroadApplication) request).getResult();
+                row[3] = app.getResult();
+                model.addRow(row);
+            }
+            else if(request instanceof business.workqueue.InternshipPlacementRequest){
+                business.workqueue.InternshipPlacementRequest internReq = (business.workqueue.InternshipPlacementRequest) request;
+                
+                if("Offer Accepted".equals(internReq.getStatus()) || "Internship Completed".equals(internReq.getStatus())){
+                    hasAcceptedOffer = true;
+                }
+
+                Object[] row = new Object[4];
+                row[0] = internReq; 
+                row[1] = internReq.getCompanyPlaced() != null ? internReq.getCompanyPlaced() : "Corporate Internship"; 
+                row[2] = internReq.getStatus();
+                row[3] = internReq.getResult(); 
                 
                 model.addRow(row);
             }
         }
         
-        // 2. Second Pass: Set Button State based on "Single Acceptance" Rule
-        // This logic MUST be outside the loop to consider the aggregate state of all applications
+        // 2. 设置按钮状态
         if(hasAcceptedOffer){
-          
-            // If they have accepted ANY offer, they cannot accept another one.
+            // 如果已经接受了任何 Offer，就不能再接受其他的
             btnAccept.setEnabled(false); 
-            // They can proceed to visa (logic in button action will ensure they select the right row)
+            // 只有这时才允许申请签证 (具体还要看选中的行)
             btnRequestVisa.setEnabled(true); 
         } else {
-        // No offer accepted yet.
-        btnRequestVisa.setEnabled(false); // Cannot apply for visa yet
+            btnRequestVisa.setEnabled(false); // 没接受 Offer 不能申请签证
 
-        boolean canAccept = false;
-        for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()) {
-            if (request instanceof StudyAbroadApplication) {
-                StudyAbroadApplication app = (StudyAbroadApplication) request;
-                String status = app.getStatus();
-
-                // Check if: Admitted AND Financial Aid Calculated
-                if ("Admitted".equals(status) && app.isAidSaved()) {
-                    canAccept = true;
-                    break;
+            boolean canAccept = false;
+            // 再次遍历，检查是否有待接受的 Offer
+            for (WorkRequest request : userAccount.getWorkQueue().getWorkRequestList()) {
+                // 检查留学 Offer
+                if (request instanceof StudyAbroadApplication) {
+                    StudyAbroadApplication app = (StudyAbroadApplication) request;
+                    if ("Admitted".equals(app.getStatus()) && app.isAidSaved()) {
+                        canAccept = true;
+                        break;
+                    }
+                }
+                // 【新增】检查实习 Offer (修复点：加上这块逻辑)
+                else if (request instanceof business.workqueue.InternshipPlacementRequest) {
+                    if ("Internship Offered".equals(request.getStatus())) {
+                        canAccept = true;
+                        break;
+                    }
                 }
             }
-        }
-
-        btnAccept.setEnabled(canAccept);
+            btnAccept.setEnabled(canAccept);
         }
     }
 
@@ -206,18 +218,25 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
              return;
         }
         
-        StudyAbroadApplication request = (StudyAbroadApplication)tblStatus.getValueAt(selectedRow, 0);
+        // 1. 获取通用对象，避免崩溃
+        WorkRequest request = (WorkRequest)tblStatus.getValueAt(selectedRow, 0);
         
-        // Strict Check: Can only apply for visa for the ACCEPTED offer
-        if(!"Offer Accepted".equals(request.getStatus())){
-             JOptionPane.showMessageDialog(null, "You must accept an offer before requesting a visa, and you must select that specific application.");
-             return;
+        // 2. 检查是否为留学申请 (通常只有留学需要走这个复杂的 Visa 流程)
+        if (request instanceof StudyAbroadApplication) {
+            if(!"Offer Accepted".equals(request.getStatus())){
+                 JOptionPane.showMessageDialog(null, "You must accept an offer before requesting a visa.");
+                 return;
+            }
+            // 跳转到签证页面
+            RequestVisaJPanel visaPanel = new RequestVisaJPanel(userProcessContainer, userAccount, system);
+            userProcessContainer.add("RequestVisaJPanel", visaPanel);
+            CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+            layout.next(userProcessContainer);
+            
+        } else if (request instanceof business.workqueue.InternshipPlacementRequest) {
+            // 如果是实习申请，直接弹窗提示不需要签证
+            JOptionPane.showMessageDialog(null, "Domestic internships do not require a separate visa application process in this system.");
         }
-        
-        RequestVisaJPanel visaPanel = new RequestVisaJPanel(userProcessContainer, userAccount, system);
-        userProcessContainer.add("RequestVisaJPanel", visaPanel);
-        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
-        layout.next(userProcessContainer);
     }//GEN-LAST:event_btnRequestVisaActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
@@ -229,23 +248,72 @@ public class ViewApplicationStatusJPanel extends javax.swing.JPanel {
 
     private void btnAcceptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAcceptActionPerformed
         int selectedRow = tblStatus.getSelectedRow();
-        if(selectedRow >= 0){
-            StudyAbroadApplication request = (StudyAbroadApplication)tblStatus.getValueAt(selectedRow, 0);
-            
-            if("Admitted".equals(request.getStatus())){
-                // Confirm user intent
-                int dialogResult = JOptionPane.showConfirmDialog(null, "Are you sure you want to accept this offer? You will NOT be able to accept other offers.", "Warning", JOptionPane.YES_NO_OPTION);
-                if(dialogResult == JOptionPane.YES_OPTION){
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(null, "Please select an application.");
+            return;
+        }
+
+        // 1. 获取通用 WorkRequest 对象 (不要直接强转成 StudyAbroadApplication)
+        business.workqueue.WorkRequest request = (business.workqueue.WorkRequest) tblStatus.getValueAt(selectedRow, 0);
+
+        // 2. 判断请求类型并处理
+        if (request instanceof business.workqueue.StudyAbroadApplication) {
+            // === 原有的留学申请逻辑 ===
+            if ("Admitted".equals(request.getStatus())) {
+                int dialogResult = JOptionPane.showConfirmDialog(null, "Accept University Offer?", "Confirm", JOptionPane.YES_NO_OPTION);
+                if (dialogResult == JOptionPane.YES_OPTION) {
                     request.setStatus("Offer Accepted");
                     request.setResult("Offer Accepted by Student");
-                    JOptionPane.showMessageDialog(null, "Offer Accepted! You may now request a visa.");
-                    populateTable(); // Refresh UI to lock other buttons
+                    JOptionPane.showMessageDialog(null, "University Offer Accepted! You may now request a visa.");
+                    populateTable();
                 }
-            } else {
+            } 
+            else {
                 JOptionPane.showMessageDialog(null, "You can only accept 'Admitted' applications.");
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Please select an application.");
+            
+        } else if (request instanceof business.workqueue.InternshipPlacementRequest) {
+            business.workqueue.InternshipPlacementRequest internReq = (business.workqueue.InternshipPlacementRequest) request;
+            
+            if ("Internship Offered".equals(internReq.getStatus())) {
+                int dialogResult = JOptionPane.showConfirmDialog(null, "Accept Internship Offer?", "Confirm", JOptionPane.YES_NO_OPTION);
+                
+                if (dialogResult == JOptionPane.YES_OPTION) {
+                    // A. 更新状态
+                    internReq.setStatus("Offer Accepted");
+                    internReq.setResult("Offer Accepted by Student");
+                    
+                    // B. 【关键步骤】将请求转发给现场主管 (Operations Organization)
+                    boolean forwarded = false;
+                    
+                    // 遍历整个网络，找到 Corporate Enterprise -> Operations Organization
+                    for (business.network.Network network : system.getNetworkList()) {
+                        for (business.enterprise.Enterprise ent : network.getEnterpriseDirectory().getEnterpriseList()) {
+                            // 找到企业
+                            if (ent instanceof business.enterprise.CorporateEnterprise) {
+                                for (business.organization.Organization org : ent.getOrganizationDirectory().getOrganizationList()) {
+                                    // 找到主管所在的部门 (根据 ConfigureASystem，主管在 OperationsOrganization)
+                                    if (org instanceof business.organization.OperationsOrganization) {
+                                        org.getWorkQueue().getWorkRequestList().add(internReq);
+                                        forwarded = true;
+                                        System.out.println("Request forwarded to Operations/Supervisor queue.");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (forwarded) {
+                        JOptionPane.showMessageDialog(null, "Internship Accepted! Your Site Supervisor has been notified.");
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Internship Accepted, but could not notify Supervisor (Org not found).");
+                    }
+                    
+                    populateTable();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "You can only accept requests with 'Internship Offered' status.");
+            }
         }
     }//GEN-LAST:event_btnAcceptActionPerformed
 
