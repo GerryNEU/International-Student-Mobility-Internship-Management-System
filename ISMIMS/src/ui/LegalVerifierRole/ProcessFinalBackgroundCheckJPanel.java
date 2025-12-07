@@ -11,6 +11,7 @@ import business.organization.OperationsOrganization;
 import business.organization.Organization;
 import business.workqueue.StudyAbroadApplication;
 import business.workqueue.VisaSupportRequest;
+import business.workqueue.WorkRequest;
 import java.awt.CardLayout;
 import java.awt.Component;
 import javax.swing.JOptionPane;
@@ -41,35 +42,76 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
 }
     
     private void populateData() {
-        if (request.getSender() != null) {
+        if (request == null) return;
+        
+        // Basic information
+        if (request.getSender() != null && request.getSender().getEmployee() != null) {
             txtStudent.setText(request.getSender().getEmployee().getName());
         }
-        txtPassport.setText(request.getPassportNumber() != null ? request.getPassportNumber() : "N/A");
-        txtCountry.setText(request.getIssuingCountry() != null ? request.getIssuingCountry() : "N/A");
+        txtPassport.setText(request.getPassportNumber());
+        txtCountry.setText(request.getIssuingCountry());
         
+        // Check Financial Support status
+        StudyAbroadApplication studentApp = findStudentApplication();
+        
+        if (studentApp != null && studentApp.isAidApproved()) {
+            // Financial support approved
+            txtFinanceStatus.setText("✓ Approved: $" + studentApp.getGrantAmount());
+            txtFinanceStatus.setForeground(new java.awt.Color(0, 128, 0)); // Green
+            chkFinancialProof.setEnabled(true);
+        } else if (studentApp != null && studentApp.isAidSaved()) {
+            // Aid saved but not approved yet
+            txtFinanceStatus.setText("⏳ Pending: $" + studentApp.getGrantAmount());
+            txtFinanceStatus.setForeground(new java.awt.Color(255, 165, 0)); // Orange
+            chkFinancialProof.setEnabled(false);
+        } else {
+            // No financial support
+            txtFinanceStatus.setText("✗ No Financial Support");
+            txtFinanceStatus.setForeground(java.awt.Color.RED);
+            chkFinancialProof.setEnabled(false);
+        }
+        
+        // Disable display fields
         txtStudent.setEnabled(false);
         txtPassport.setEnabled(false);
         txtCountry.setEnabled(false);
+        txtFinanceStatus.setEnabled(false);
         
+        // Load existing status
         chkLegalCheck.setSelected(request.isLegalCheckPassed());
-        chkFinancialProof.setSelected(request.isFinancialProofVerified());
-        
-        StudyAbroadApplication app = request.getStudyAbroadApplication();
-        if (app != null && app.isAidApproved()) {
-            txtAid.setText("$" + String.format("%.2f", app.getGrantAmount()));
-        } else {
-            txtAid.setText("N/A");
+        if (chkFinancialProof.isEnabled()) {
+            chkFinancialProof.setSelected(request.isFinancialProofVerified());
         }
-        txtAid.setEnabled(false);
+    }
+
+    private StudyAbroadApplication findStudentApplication() {
+        if (request == null || request.getSender() == null) {
+            return null;
+        }
+        
+        // Traverse all organizations to find the student's StudyAbroadApplication
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                for (Organization org : enterprise.getOrganizationDirectory().getOrganizationList()) {
+                    for (WorkRequest wr : org.getWorkQueue().getWorkRequestList()) {
+                        if (wr instanceof StudyAbroadApplication) {
+                            StudyAbroadApplication app = (StudyAbroadApplication) wr;
+                            // Check if it's the same student
+                            if (app.getSender() != null && 
+                                app.getSender().equals(request.getSender())) {
+                                return app;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        
+        return null;
     }
     
     private void goBack() {
         userProcessContainer.remove(this);
-        Component[] componentArray = userProcessContainer.getComponents();
-        Component component = componentArray[componentArray.length - 1];
-        if (component instanceof LegalVerifierWorkAreaJPanel) {
-            ((LegalVerifierWorkAreaJPanel) component).populateTable();
-        }
         CardLayout layout = (CardLayout) userProcessContainer.getLayout();
         layout.previous(userProcessContainer);
     }
@@ -87,6 +129,22 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
             }
         }
         return null;
+    }
+    
+     private void forwardToVisaSpecialist() {
+        
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (enterprise.getClass().getSimpleName().contains("VisaGovernment")) {
+                    for (Organization org : enterprise.getOrganizationDirectory().getOrganizationList()) {
+                        if (org.getClass().getSimpleName().contains("Operations")) {
+                            org.getWorkQueue().getWorkRequestList().add(request);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
     }
     
     
@@ -117,7 +175,7 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtNotes = new javax.swing.JTextArea();
         lblAid = new javax.swing.JLabel();
-        txtAid = new javax.swing.JTextField();
+        txtFinanceStatus = new javax.swing.JTextField();
 
         btnBack.setText("<< Back");
         btnBack.addActionListener(new java.awt.event.ActionListener() {
@@ -167,7 +225,7 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
 
         lblAid.setText("Finance Aid:");
 
-        txtAid.setEditable(false);
+        txtFinanceStatus.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -194,7 +252,7 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
                                     .addComponent(txtCountry, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
                                     .addComponent(chkFinancialProof)
                                     .addComponent(chkLegalCheck)
-                                    .addComponent(txtAid)))
+                                    .addComponent(txtFinanceStatus)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(9, 9, 9)
                                 .addComponent(btnApprove)
@@ -232,7 +290,7 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblAid)
-                    .addComponent(txtAid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtFinanceStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
                 .addComponent(chkLegalCheck)
                 .addGap(18, 18, 18)
@@ -251,43 +309,69 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
 
     private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
          // TODO add your handling code here:
-         request.setLegalCheckPassed(chkLegalCheck.isSelected());
-        request.setFinancialProofVerified(chkFinancialProof.isSelected());
-        request.setStatus("Rejected by Legal Verifier");
+          request.setStatus("Rejected by Legal Verifier");
         
         String notes = txtNotes.getText().trim();
         if (!notes.isEmpty()) {
-            request.setMessage("Rejected: " + notes);
+            request.setResult("Rejected: " + notes);
+        } else {
+            request.setResult("Rejected by Legal Verifier");
         }
         
-        JOptionPane.showMessageDialog(this, "Application Rejected.");
+        JOptionPane.showMessageDialog(this, 
+            "Application has been rejected.", 
+            "Rejected", JOptionPane.INFORMATION_MESSAGE);
+        
         goBack();
-    
+   
     }//GEN-LAST:event_btnRejectActionPerformed
 
     private void btnApproveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApproveActionPerformed
         // TODO add your handling code here:
-        if (!chkLegalCheck.isSelected() || !chkFinancialProof.isSelected()) {
+  
+        if (!chkLegalCheck.isSelected()) {
             JOptionPane.showMessageDialog(this, 
-                "Both Legal Check and Financial Proof must be verified to approve!",
-                "Validation Required",
-                JOptionPane.WARNING_MESSAGE);
+                "Please complete the Background Check first.", 
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
             return;
         }
+        
+    
+        if (!chkFinancialProof.isEnabled()) {
+            JOptionPane.showMessageDialog(this, 
+                "Cannot verify financial proof!\n\n" +
+                "Student's financial aid must be approved by Financial Auditor first.", 
+                "Financial Support Required", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        if (!chkFinancialProof.isSelected()) {
+            JOptionPane.showMessageDialog(this, 
+                "Please check 'Financial Proof Verified' checkbox.", 
+                "Validation Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
         
         request.setLegalCheckPassed(true);
         request.setFinancialProofVerified(true);
         request.setStatus("Approved - Pending Visa Issuance");
         
-        Organization visaOrg = findVisaSpecialistOrganization();
-        if (visaOrg != null) {
-            visaOrg.getWorkQueue().getWorkRequestList().add(request);
-            JOptionPane.showMessageDialog(this, "Approved! Forwarded to Visa Specialist.");
-        } else {
-            JOptionPane.showMessageDialog(this, "Approved! (Visa Specialist org not found)");
+        String notes = txtNotes.getText().trim();
+        if (!notes.isEmpty()) {
+            request.setResult(notes);
         }
         
+        
+        forwardToVisaSpecialist();
+        
+        JOptionPane.showMessageDialog(this, 
+            "✅ Background Check Approved!\n\n" +
+            "Request forwarded to Visa Specialist for visa issuance.", 
+            "Success", JOptionPane.INFORMATION_MESSAGE);
+        
         goBack();
+    
     }//GEN-LAST:event_btnApproveActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
@@ -309,10 +393,12 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblNotes;
     private javax.swing.JLabel lblPassport;
     private javax.swing.JLabel lblStudent;
-    private javax.swing.JTextField txtAid;
     private javax.swing.JTextField txtCountry;
+    private javax.swing.JTextField txtFinanceStatus;
     private javax.swing.JTextArea txtNotes;
     private javax.swing.JTextField txtPassport;
     private javax.swing.JTextField txtStudent;
     // End of variables declaration//GEN-END:variables
 }
+
+
