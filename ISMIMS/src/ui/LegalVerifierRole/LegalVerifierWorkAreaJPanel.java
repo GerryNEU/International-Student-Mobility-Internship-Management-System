@@ -8,7 +8,12 @@ import business.EcoSystem;
 import business.enterprise.Enterprise;
 import business.organization.Organization;
 import business.useraccount.UserAccount;
+import business.workqueue.VisaSupportRequest;
+import business.workqueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,20 +25,40 @@ public class LegalVerifierWorkAreaJPanel extends javax.swing.JPanel {
     private UserAccount account;
     private Organization organization;
     private Enterprise enterprise;
-    private EcoSystem business;
+    private EcoSystem system;
     
     /**
      * Creates new form LegalVerifierWorkAreaJPanel
      */
-    public LegalVerifierWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem business) {
+    public LegalVerifierWorkAreaJPanel(JPanel userProcessContainer, UserAccount account, Organization organization, Enterprise enterprise, EcoSystem system) {
         initComponents();
         
         this.userProcessContainer = userProcessContainer;
         this.account = account;
         this.organization = organization;
         this.enterprise = enterprise;
-        this.business = business;
+        this.system = system;
+        
+        populateTable();
     }
+    
+     public void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblRequests.getModel();
+        model.setRowCount(0);
+        
+        for (WorkRequest request : organization.getWorkQueue().getWorkRequestList()) {
+            if (request instanceof VisaSupportRequest) {
+                VisaSupportRequest visaReq = (VisaSupportRequest) request;
+                Object[] row = new Object[4];
+                row[0] = visaReq;
+                row[1] = visaReq.getSender() != null ? visaReq.getSender().getEmployee().getName() : "Unknown";
+                row[2] = visaReq.getStatus();
+                row[3] = visaReq.getRequestDate();
+                model.addRow(row);
+            }
+        }
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -44,30 +69,106 @@ public class LegalVerifierWorkAreaJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblRequests = new javax.swing.JTable();
+        btnProcess = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
 
-        jLabel1.setText("Legal Verifier Dashboard");
+        lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblTitle.setText("Legal Verifier Dashboard");
+
+        tblRequests.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Request", "Student", "Status", "Date"
+            }
+        ));
+        jScrollPane1.setViewportView(tblRequests);
+
+        btnProcess.setText("Process Request");
+        btnProcess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProcessActionPerformed(evt);
+            }
+        });
+
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(157, 157, 157)
-                .addComponent(jLabel1)
-                .addContainerGap(100, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(184, 184, 184)
+                        .addComponent(btnProcess)
+                        .addGap(120, 120, 120)
+                        .addComponent(btnRefresh))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(269, 269, 269)
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(52, 52, 52)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 637, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(61, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(122, 122, 122)
-                .addComponent(jLabel1)
-                .addContainerGap(161, Short.MAX_VALUE))
+                .addGap(67, 67, 67)
+                .addComponent(lblTitle)
+                .addGap(43, 43, 43)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 368, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(49, 49, 49)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnProcess)
+                    .addComponent(btnRefresh))
+                .addContainerGap(63, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        populateTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
+    private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblRequests.getSelectedRow();
+        
+        if (selectedRow < 0) {
+            JOptionPane.showMessageDialog(this, "Please select a request to process.");
+            return;
+        }
+        
+        VisaSupportRequest request = (VisaSupportRequest) tblRequests.getValueAt(selectedRow, 0);
+        
+        ProcessFinalBackgroundCheckJPanel processPanel = new ProcessFinalBackgroundCheckJPanel(userProcessContainer, request, organization, system);
+        userProcessContainer.add("ProcessFinalBackgroundCheckJPanel", processPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+   
+
+    }//GEN-LAST:event_btnProcessActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JButton btnProcess;
+    private javax.swing.JButton btnRefresh;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTable tblRequests;
     // End of variables declaration//GEN-END:variables
 }

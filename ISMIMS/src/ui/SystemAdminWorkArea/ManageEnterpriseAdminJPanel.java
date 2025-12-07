@@ -254,8 +254,7 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
 
     private void txtEmpNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmpNameActionPerformed
         // TODO add your handling code here:
-         
-  
+        
     }//GEN-LAST:event_txtEmpNameActionPerformed
 
     private void btnAddAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAdminActionPerformed
