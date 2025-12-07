@@ -22,7 +22,7 @@ public class ProcessInternshipPlacementJPanel extends javax.swing.JPanel {
     /**
      * Creates new form ProcessInternshipPlacementJPanel
      */
-    public ProcessInternshipPlacementJPanel() {
+    public ProcessInternshipPlacementJPanel(JPanel userProcessContainer, InternshipPlacementRequest request) {
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.request = request;
@@ -57,30 +57,179 @@ public class ProcessInternshipPlacementJPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        txtStudent = new javax.swing.JTextField();
+        txtSkills = new javax.swing.JTextField();
+        txtIndustry = new javax.swing.JTextField();
+        txtPosition = new javax.swing.JTextField();
+        btnOffer = new javax.swing.JButton();
+        btnReject = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel1.setText("Evaluate Candidate");
+
+        jLabel2.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        jLabel2.setText("Student Name:");
+
+        jLabel3.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        jLabel3.setText("Skills:");
+
+        jLabel4.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        jLabel4.setText("Industry:");
+
+        jLabel5.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        jLabel5.setText("Offer Position:");
+
+        txtStudent.setEditable(false);
+        txtStudent.setText(" ");
+
+        txtSkills.setEditable(false);
+        txtSkills.setText(" ");
+
+        txtIndustry.setEditable(false);
+        txtIndustry.setText(" ");
+
+        btnOffer.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        btnOffer.setText("Extend Offer");
+        btnOffer.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOfferActionPerformed(evt);
+            }
+        });
+
+        btnReject.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        btnReject.setText("Reject Candidate");
+        btnReject.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRejectActionPerformed(evt);
+            }
+        });
+
+        btnBack.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(190, 190, 190)
-                .addComponent(jLabel1)
-                .addContainerGap(189, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(190, 190, 190)
+                        .addComponent(jLabel1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(141, 141, 141)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel4)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(btnOffer)
+                                .addComponent(jLabel5)))
+                        .addGap(37, 37, 37)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtStudent)
+                            .addComponent(txtIndustry, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                            .addComponent(txtSkills, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE)
+                            .addComponent(txtPosition)
+                            .addComponent(btnReject)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(250, 250, 250)
+                        .addComponent(btnBack)))
+                .addContainerGap(137, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addComponent(jLabel1)
-                .addContainerGap(394, Short.MAX_VALUE))
+                .addGap(62, 62, 62)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(txtSkills, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(txtIndustry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(38, 38, 38)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnOffer)
+                    .addComponent(btnReject))
+                .addGap(18, 18, 18)
+                .addComponent(btnBack)
+                .addContainerGap(80, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        goBack();
+    }//GEN-LAST:event_btnBackActionPerformed
 
+    private void btnOfferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOfferActionPerformed
+        // TODO add your handling code here:
+        String position = txtPosition.getText();
+        if(position.trim().isEmpty()){
+            JOptionPane.showMessageDialog(null, "Please enter a position title to offer.");
+            return;
+        }
+        
+        //update request
+        request.setStatus("Internship Offered");
+        request.setResult("Offer: " + position);
+        request.setPositionOffered(position);
+        
+        JOptionPane.showMessageDialog(null, "Offer extended successfully!");
+        goBack();
+    }//GEN-LAST:event_btnOfferActionPerformed
+
+    private void btnRejectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRejectActionPerformed
+        // TODO add your handling code here:
+        request.setStatus("Rejected");
+        request.setResult("Rejected by Recruiter");
+        JOptionPane.showMessageDialog(null, "Application rejected.");
+        goBack();
+    }//GEN-LAST:event_btnRejectActionPerformed
+
+    private void goBack() {
+        userProcessContainer.remove(this);
+        Component[] componentArray = userProcessContainer.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        CorporateRecruiterWorkAreaJPanel dwjp = (CorporateRecruiterWorkAreaJPanel) component;
+        dwjp.populateTable(); // 刷新上一个页面的表格
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+    }
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnOffer;
+    private javax.swing.JButton btnReject;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JTextField txtIndustry;
+    private javax.swing.JTextField txtPosition;
+    private javax.swing.JTextField txtSkills;
+    private javax.swing.JTextField txtStudent;
     // End of variables declaration//GEN-END:variables
 }
