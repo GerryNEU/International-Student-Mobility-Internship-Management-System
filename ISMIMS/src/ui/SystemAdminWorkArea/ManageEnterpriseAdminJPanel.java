@@ -5,6 +5,10 @@
 package ui.SystemAdminWorkArea;
 
 import business.EcoSystem;
+import business.enterprise.Enterprise;
+import business.network.Network;
+import business.organization.Organization;
+import business.useraccount.UserAccount;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 
@@ -24,9 +28,54 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
     initComponents();
     this.userProcessContainer = userProcessContainer;
     this.system = system;
+    
+     populateEnterpriseComboBox();
+        populateTable();
    
 }
     
+    private void populateEnterpriseComboBox() {
+        cmbEnterprise.removeAllItems();
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                cmbEnterprise.addItem(enterprise.getName());
+            }
+        }
+    }
+
+    private Enterprise findEnterpriseByName(String name) {
+        for (Network network : system.getNetworkList()) {
+            for (Enterprise enterprise : network.getEnterpriseDirectory().getEnterpriseList()) {
+                if (enterprise.getName().equals(name)) {
+                    return enterprise;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void populateTable() {
+        DefaultTableModel model = (DefaultTableModel) tblAdmins.getModel();
+        model.setRowCount(0);
+        
+        String selectedName = (String) cmbEnterprise.getSelectedItem();
+        if (selectedName == null) return;
+        
+        Enterprise selectedEnterprise = findEnterpriseByName(selectedName);
+        if (selectedEnterprise == null) return;
+        
+        for (Organization org : selectedEnterprise.getOrganizationDirectory().getOrganizationList()) {
+            for (UserAccount account : org.getUserAccountDirectory().getUserAccountList()) {
+                Object[] row = new Object[4];
+                row[0] = account;
+                row[1] = account.getEmployee().getName();
+                row[2] = account.getRole().getClass().getSimpleName();
+                row[3] = org.getName();
+                model.addRow(row);
+            }
+        }
+    }
+
    
 
     /**
@@ -77,11 +126,14 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
 
         lblPassword.setText("Password:");
 
-        txtUsername.setText("jTextField1");
-
         btnBack.setText("<< Back");
 
         btnAddAdmin.setText("AddAdmin");
+        btnAddAdmin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddAdminActionPerformed(evt);
+            }
+        });
 
         lblTitle.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         lblTitle.setText("Manage Enterprise Admins");
@@ -93,9 +145,11 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
 
         lblEmpName.setText("Name:");
 
-        txtPassword.setText("jTextField2");
-
-        txtEmpName.setText("jTextField3");
+        txtEmpName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtEmpNameActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -176,7 +230,16 @@ public class ManageEnterpriseAdminJPanel extends javax.swing.JPanel {
 
     private void cmbEnterpriseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbEnterpriseActionPerformed
         // TODO add your handling code here:
+        populateTable();
     }//GEN-LAST:event_cmbEnterpriseActionPerformed
+
+    private void txtEmpNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtEmpNameActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtEmpNameActionPerformed
+
+    private void btnAddAdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddAdminActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAddAdminActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
