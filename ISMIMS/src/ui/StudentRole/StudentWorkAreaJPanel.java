@@ -52,6 +52,7 @@ public class StudentWorkAreaJPanel extends javax.swing.JPanel {
         lblTitle = new javax.swing.JLabel();
         lblEnterprise = new javax.swing.JLabel();
         lblValue = new javax.swing.JLabel();
+        btnFindInternship = new javax.swing.JButton();
 
         btnApply.setText("Request Study Abroad");
         btnApply.addActionListener(new java.awt.event.ActionListener() {
@@ -76,6 +77,13 @@ public class StudentWorkAreaJPanel extends javax.swing.JPanel {
         lblValue.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
         lblValue.setText("<value>");
 
+        btnFindInternship.setText("Find Internship");
+        btnFindInternship.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFindInternshipActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,7 +102,10 @@ public class StudentWorkAreaJPanel extends javax.swing.JPanel {
                         .addComponent(lblValue))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(316, 316, 316)
-                        .addComponent(lblTitle)))
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(348, 348, 348)
+                        .addComponent(btnFindInternship)))
                 .addContainerGap(309, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -106,7 +117,9 @@ public class StudentWorkAreaJPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnApply)
                     .addComponent(btnStatus))
-                .addGap(96, 96, 96)
+                .addGap(18, 18, 18)
+                .addComponent(btnFindInternship)
+                .addGap(55, 55, 55)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblEnterprise)
                     .addComponent(lblValue))
@@ -130,9 +143,18 @@ public class StudentWorkAreaJPanel extends javax.swing.JPanel {
         layout.next(userProcessContainer);
     }//GEN-LAST:event_btnStatusActionPerformed
 
+    private void btnFindInternshipActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFindInternshipActionPerformed
+        // TODO add your handling code here:
+        RequestInternshipJPanel requestPanel = new RequestInternshipJPanel(userProcessContainer, userAccount, system);
+        userProcessContainer.add("RequestInternshipJPanel", requestPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+    }//GEN-LAST:event_btnFindInternshipActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnApply;
+    private javax.swing.JButton btnFindInternship;
     private javax.swing.JButton btnStatus;
     private javax.swing.JLabel lblEnterprise;
     private javax.swing.JLabel lblTitle;

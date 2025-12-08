@@ -8,7 +8,12 @@ import business.EcoSystem;
 import business.enterprise.Enterprise;
 import business.organization.Organization;
 import business.useraccount.UserAccount;
+import business.workqueue.InternshipPlacementRequest;
+import business.workqueue.WorkRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -33,8 +38,30 @@ public class CorporateRecruiterWorkAreaJPanel extends javax.swing.JPanel {
         this.organization = organization;
         this.enterprise = enterprise;
         this.business = business;
+        
+        populateTable();
     }
-
+    
+    
+    public void populateTable(){
+        DefaultTableModel model = (DefaultTableModel) tblWorkQueue.getModel();
+        model.setRowCount(0);
+        
+        for(WorkRequest request : organization.getWorkQueue().getWorkRequestList()){
+            if(request instanceof InternshipPlacementRequest){
+                InternshipPlacementRequest ir = (InternshipPlacementRequest) request;
+                Object[] row = new Object[4];
+                row[0] = ir; 
+                row[1] = ir.getStudentSkills();
+                row[2] = ir.getPreferredIndustry();
+                row[3] = ir.getStatus();
+                
+                model.addRow(row);
+            }
+        }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -45,29 +72,115 @@ public class CorporateRecruiterWorkAreaJPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblWorkQueue = new javax.swing.JTable();
+        btnProcess = new javax.swing.JButton();
+        btnRefresh = new javax.swing.JButton();
 
+        jLabel1.setFont(new java.awt.Font("Helvetica Neue", 0, 24)); // NOI18N
         jLabel1.setText("Corporate Recruiter Dashboard");
+
+        jScrollPane1.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+
+        tblWorkQueue.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Student Name", "Skills", "Industry", "Status"
+            }
+        ));
+        jScrollPane1.setViewportView(tblWorkQueue);
+
+        btnProcess.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        btnProcess.setText("Process Application");
+        btnProcess.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnProcessActionPerformed(evt);
+            }
+        });
+
+        btnRefresh.setFont(new java.awt.Font("Helvetica Neue", 0, 14)); // NOI18N
+        btnRefresh.setText("Refresh");
+        btnRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRefreshActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(167, 167, 167)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(128, 128, 128)
+                        .addComponent(btnProcess)
+                        .addGap(104, 104, 104)
+                        .addComponent(btnRefresh))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 536, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(51, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
                 .addComponent(jLabel1)
-                .addContainerGap(52, Short.MAX_VALUE))
+                .addGap(143, 143, 143))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(126, 126, 126)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel1)
-                .addContainerGap(157, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 258, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(27, 27, 27)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnRefresh)
+                    .addComponent(btnProcess))
+                .addContainerGap(90, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnProcessActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnProcessActionPerformed
+        // TODO add your handling code here:
+        int selectedRow = tblWorkQueue.getSelectedRow();
+        
+        if (selectedRow < 0){
+            JOptionPane.showMessageDialog(null, "Please select a request to process.");
+            return;
+        }
+        
+        InternshipPlacementRequest request = (InternshipPlacementRequest)tblWorkQueue.getValueAt(selectedRow, 0);
+        
+        
+        if (!"Pending Recruiter Review".equals(request.getStatus())){
+             JOptionPane.showMessageDialog(null, "This request has already been processed.");
+             return;
+        }
+        
+        ProcessInternshipPlacementJPanel processPanel = new ProcessInternshipPlacementJPanel(userProcessContainer, request);
+        userProcessContainer.add("ProcessInternshipPlacementJPanel", processPanel);
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.next(userProcessContainer);
+        
+    }//GEN-LAST:event_btnProcessActionPerformed
+
+    private void btnRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRefreshActionPerformed
+        // TODO add your handling code here:
+        populateTable();
+    }//GEN-LAST:event_btnRefreshActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnProcess;
+    private javax.swing.JButton btnRefresh;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tblWorkQueue;
     // End of variables declaration//GEN-END:variables
 }

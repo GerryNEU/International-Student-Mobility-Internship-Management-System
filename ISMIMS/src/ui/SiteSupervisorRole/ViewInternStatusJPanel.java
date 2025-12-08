@@ -4,19 +4,48 @@
  */
 package ui.SiteSupervisorRole;
 
+import business.workqueue.InternshipPlacementRequest;
+import java.awt.CardLayout;
+import java.awt.Component;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
 /**
  *
  * @author gerrysu
  */
 public class ViewInternStatusJPanel extends javax.swing.JPanel {
-
+    
+    private JPanel userProcessContainer;
+    private InternshipPlacementRequest request;
+    
     /**
      * Creates new form ViewInternStatusJPanel
      */
-    public ViewInternStatusJPanel() {
+    public ViewInternStatusJPanel(JPanel userProcessContainer, InternshipPlacementRequest request) {
         initComponents();
+        this.userProcessContainer = userProcessContainer;
+        this.request = request;
+        
+        populateData();
+        
     }
-
+    
+    
+    private void populateData(){
+        if(request.getSender() != null)
+            txtStudent.setText(request.getSender().getEmployee().getName());
+        
+        txtPosition.setText(request.getPositionOffered());
+        
+        if(request.getSupervisorFeedback() != null){
+            txtFeedback.setText(request.getSupervisorFeedback());
+        }
+        
+        txtStudent.setEnabled(false);
+        txtPosition.setEnabled(false);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -26,19 +55,155 @@ public class ViewInternStatusJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblStudent = new javax.swing.JLabel();
+        lblPosition = new javax.swing.JLabel();
+        lblStudent2 = new javax.swing.JLabel();
+        lblFeedback = new javax.swing.JLabel();
+        txtStudent = new javax.swing.JTextField();
+        txtPosition = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtFeedback = new javax.swing.JTextArea();
+        btnSubmit = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
+
+        lblStudent.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblStudent.setText("Student:");
+
+        lblPosition.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblPosition.setText("Position:");
+
+        lblStudent2.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+
+        lblFeedback.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        lblFeedback.setText("Performance Review:");
+
+        txtStudent.setEditable(false);
+        txtStudent.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+
+        txtPosition.setEditable(false);
+        txtPosition.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+
+        txtFeedback.setColumns(20);
+        txtFeedback.setRows(5);
+        jScrollPane1.setViewportView(txtFeedback);
+
+        btnSubmit.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnSubmit.setText("Submit Evalation");
+        btnSubmit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSubmitActionPerformed(evt);
+            }
+        });
+
+        btnBack.setFont(new java.awt.Font("Helvetica Neue", 0, 18)); // NOI18N
+        btnBack.setText("<< Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(174, 174, 174)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblPosition)
+                            .addComponent(lblStudent))
+                        .addGap(32, 32, 32)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPosition, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(110, 110, 110)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(40, 40, 40)
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblStudent2))
+                            .addComponent(lblFeedback)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(137, 137, 137)
+                        .addComponent(btnSubmit)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnBack)))
+                .addContainerGap(143, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(71, 71, 71)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblStudent)
+                    .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblPosition)
+                    .addComponent(txtPosition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(lblFeedback)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(74, 74, 74)
+                        .addComponent(lblStudent2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnSubmit)
+                    .addComponent(btnBack))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
+        // TODO add your handling code here:
+        String feedback = txtFeedback.getText();
+        if(feedback.isEmpty()){
+            JOptionPane.showMessageDialog(null, "Please enter feedback.");
+            return;
+        }
+        
+        request.setSupervisorFeedback(feedback);
+        request.setStatus("Internship Completed");
+        request.setResult("Completed. Supervisor Feedback: " + feedback);
+        
+        JOptionPane.showMessageDialog(null, "Evaluation Submitted!");
+        goBack();
+    }//GEN-LAST:event_btnSubmitActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        goBack();
+    }//GEN-LAST:event_btnBackActionPerformed
+    
+    
+    private void goBack() {
+        userProcessContainer.remove(this);
+        Component[] componentArray = userProcessContainer.getComponents();
+        Component component = componentArray[componentArray.length - 1];
+        SiteSupervisorWorkAreaJPanel dwjp = (SiteSupervisorWorkAreaJPanel) component;
+        dwjp.populateTable();
+        CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+        layout.previous(userProcessContainer);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnSubmit;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblFeedback;
+    private javax.swing.JLabel lblPosition;
+    private javax.swing.JLabel lblStudent;
+    private javax.swing.JLabel lblStudent2;
+    private javax.swing.JTextArea txtFeedback;
+    private javax.swing.JTextField txtPosition;
+    private javax.swing.JTextField txtStudent;
     // End of variables declaration//GEN-END:variables
 }
