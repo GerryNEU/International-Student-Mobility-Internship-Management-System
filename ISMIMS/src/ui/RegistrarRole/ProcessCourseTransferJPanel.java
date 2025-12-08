@@ -5,6 +5,8 @@
 package ui.RegistrarRole;
 import business.EcoSystem;
 import business.workqueue.CourseTransferRequest;
+import java.awt.CardLayout;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 /**
  *
@@ -25,8 +27,26 @@ public class ProcessCourseTransferJPanel extends javax.swing.JPanel {
         initComponents();
         this.userProcessContainer = userProcessContainer;
         this.request = request;
-        this.system = system;
+
+        populateData();
     }
+    private void populateData() {
+    if (request.getSender() != null) {
+        txtStudent.setText(request.getSender().getEmployee().getName());
+    }
+    
+    txtUniversity.setText("Host University");
+    
+    txtStudent.setEnabled(false);
+    txtUniversity.setEnabled(false);
+    
+    if ("Transcript Issued".equals(request.getStatus())) {
+        txtGrade.setText(request.getResult());
+        txtGrade.setEnabled(false);
+        btnIssue.setEnabled(false);
+    }
+}
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -37,19 +57,152 @@ public class ProcessCourseTransferJPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblTitle = new javax.swing.JLabel();
+        lblStudent = new javax.swing.JLabel();
+        txtStudent = new javax.swing.JTextField();
+        lblCourse = new javax.swing.JLabel();
+        txtUniversity = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        txtGrade = new javax.swing.JTextField();
+        btnIssue = new javax.swing.JButton();
+        btnBack = new javax.swing.JButton();
+
+        lblTitle.setFont(new java.awt.Font("Microsoft YaHei UI", 1, 24)); // NOI18N
+        lblTitle.setText("Issue Transcript");
+
+        lblStudent.setText("Student");
+
+        txtStudent.setEditable(false);
+
+        lblCourse.setText("University:");
+
+        txtUniversity.setEditable(false);
+        txtUniversity.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtUniversityActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Grade:");
+
+        btnIssue.setText("Issue Transcript");
+        btnIssue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIssueActionPerformed(evt);
+            }
+        });
+
+        btnBack.setText("<<Back");
+        btnBack.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBackActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 900, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(258, 258, 258)
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(230, 230, 230)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblStudent, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblCourse)
+                                    .addComponent(jLabel1))
+                                .addGap(175, 175, 175)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtUniversity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtGrade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnBack)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(328, 328, 328)
+                        .addComponent(btnIssue)))
+                .addContainerGap(372, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 725, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(46, 46, 46)
+                .addComponent(lblTitle)
+                .addGap(62, 62, 62)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblStudent)
+                    .addComponent(txtStudent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(53, 53, 53)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblCourse)
+                    .addComponent(txtUniversity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(55, 55, 55)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addComponent(txtGrade, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(67, 67, 67)
+                .addComponent(btnIssue)
+                .addGap(80, 80, 80)
+                .addComponent(btnBack)
+                .addContainerGap(215, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void txtUniversityActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUniversityActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtUniversityActionPerformed
+
+    private void btnIssueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIssueActionPerformed
+        String grade = txtGrade.getText().trim();
+    
+        if (grade.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "Please enter a grade.");
+            return;
+        }
+
+        if (!grade.matches("[A-F]")) {
+            JOptionPane.showMessageDialog(null, "Grade must be A, B, C, D, or F.");
+            return;
+        }
+
+        request.setStatus("Transcript Issued");
+        request.setResult("Grade: " + grade);
+
+        JOptionPane.showMessageDialog(null, 
+            "✅ Transcript Issued!\n\n" +
+            "Student: " + txtStudent.getText() + "\n" +
+            "Final Grade: " + grade);
+
+        txtGrade.setEnabled(false);
+        btnIssue.setEnabled(false);
+        goBack();
+    }//GEN-LAST:event_btnIssueActionPerformed
+
+    private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
+        // TODO add your handling code here:
+        goBack();
+    }//GEN-LAST:event_btnBackActionPerformed
+
+
+private void goBack() {
+    userProcessContainer.remove(this);
+    CardLayout layout = (CardLayout) userProcessContainer.getLayout();
+    layout.previous(userProcessContainer);
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnBack;
+    private javax.swing.JButton btnIssue;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel lblCourse;
+    private javax.swing.JLabel lblStudent;
+    private javax.swing.JLabel lblTitle;
+    private javax.swing.JTextField txtGrade;
+    private javax.swing.JTextField txtStudent;
+    private javax.swing.JTextField txtUniversity;
     // End of variables declaration//GEN-END:variables
 }
