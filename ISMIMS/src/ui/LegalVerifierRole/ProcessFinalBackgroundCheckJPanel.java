@@ -374,6 +374,7 @@ public class ProcessFinalBackgroundCheckJPanel extends javax.swing.JPanel {
     private javax.swing.JLabel lblNotes;
     private javax.swing.JLabel lblPassport;
     private javax.swing.JLabel lblStudent;
+    private javax.swing.JTextField txtAid;
     private javax.swing.JTextField txtCountry;
     private javax.swing.JTextField txtFinanceStatus;
     private javax.swing.JTextArea txtNotes;
